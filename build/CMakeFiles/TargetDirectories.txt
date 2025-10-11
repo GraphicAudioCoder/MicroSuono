@@ -1,0 +1,4 @@
+/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles/clean-all.dir
+/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles/MicroSuono.dir
+/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles/edit_cache.dir
+/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles/rebuild_cache.dir
