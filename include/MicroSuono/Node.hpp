@@ -4,7 +4,6 @@
 
 namespace ms {
 
-
 // Generic parameter for a node
 struct Param {
   std::string name;
@@ -15,7 +14,7 @@ struct Param {
 class Node {
 public:
   Node(const std::string &id, int nInputs = 1, int nOutputs = 1)
-    : id(id), nInputs(nInputs), nOutputs(nOutputs) {}
+      : id(id), nInputs(nInputs), nOutputs(nOutputs) {}
 
   virtual ~Node() = default;
 
@@ -28,7 +27,8 @@ public:
   // Realtime audio/value processing
   // inputs[i] = pointer to the i-th input buffer
   // outputs[i] = pointer to the i-th output buffer
-  virtual void process(const float *const *inputs, float **outputs, int nFrames) = 0;
+  virtual void process(const float *const *inputs, float **outputs,
+                       int nFrames) = 0;
 
   const std::string id;
   int nInputs;

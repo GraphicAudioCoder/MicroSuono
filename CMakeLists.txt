@@ -10,7 +10,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include_directories(
   ${CMAKE_SOURCE_DIR}/include 
   ${CMAKE_SOURCE_DIR}/include/MicroSuono
-  ${CMAKE_SOURCE_DIR}/engine
 )
 
 add_custom_target(clean-all
@@ -19,8 +18,7 @@ add_custom_target(clean-all
 )
 
 add_executable(MicroSuono
-  src/main.cpp
+  src/main.cpp 
   src/miniaudio_impl.cpp
   src/core/GraphManager.cpp
-  src/audio/AudioEngine.cpp
 )
