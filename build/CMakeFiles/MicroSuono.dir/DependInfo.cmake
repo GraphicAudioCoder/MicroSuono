@@ -8,6 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/riccardogiovannirosso/development/MicroSuono/src/audio/AudioEngine.cpp" "CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o" "gcc" "CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o.d"
+  "/Users/riccardogiovannirosso/development/MicroSuono/src/core/GraphManager.cpp" "CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o" "gcc" "CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o.d"
   "/Users/riccardogiovannirosso/development/MicroSuono/src/main.cpp" "CMakeFiles/MicroSuono.dir/src/main.cpp.o" "gcc" "CMakeFiles/MicroSuono.dir/src/main.cpp.o.d"
   "/Users/riccardogiovannirosso/development/MicroSuono/src/miniaudio_impl.cpp" "CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o" "gcc" "CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o.d"
   )

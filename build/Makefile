@@ -142,6 +142,54 @@ MicroSuono/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/build
 .PHONY : MicroSuono/fast
 
+src/audio/AudioEngine.o: src/audio/AudioEngine.cpp.o
+.PHONY : src/audio/AudioEngine.o
+
+# target to build an object file
+src/audio/AudioEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o
+.PHONY : src/audio/AudioEngine.cpp.o
+
+src/audio/AudioEngine.i: src/audio/AudioEngine.cpp.i
+.PHONY : src/audio/AudioEngine.i
+
+# target to preprocess a source file
+src/audio/AudioEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.i
+.PHONY : src/audio/AudioEngine.cpp.i
+
+src/audio/AudioEngine.s: src/audio/AudioEngine.cpp.s
+.PHONY : src/audio/AudioEngine.s
+
+# target to generate assembly for a file
+src/audio/AudioEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.s
+.PHONY : src/audio/AudioEngine.cpp.s
+
+src/core/GraphManager.o: src/core/GraphManager.cpp.o
+.PHONY : src/core/GraphManager.o
+
+# target to build an object file
+src/core/GraphManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o
+.PHONY : src/core/GraphManager.cpp.o
+
+src/core/GraphManager.i: src/core/GraphManager.cpp.i
+.PHONY : src/core/GraphManager.i
+
+# target to preprocess a source file
+src/core/GraphManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.i
+.PHONY : src/core/GraphManager.cpp.i
+
+src/core/GraphManager.s: src/core/GraphManager.cpp.s
+.PHONY : src/core/GraphManager.s
+
+# target to generate assembly for a file
+src/core/GraphManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.s
+.PHONY : src/core/GraphManager.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -200,6 +248,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... clean-all"
 	@echo "... MicroSuono"
+	@echo "... src/audio/AudioEngine.o"
+	@echo "... src/audio/AudioEngine.i"
+	@echo "... src/audio/AudioEngine.s"
+	@echo "... src/core/GraphManager.o"
+	@echo "... src/core/GraphManager.i"
+	@echo "... src/core/GraphManager.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

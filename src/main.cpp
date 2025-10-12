@@ -1,40 +1,45 @@
+#include "MicroSuono/GraphManager.hpp"
+#include "MicroSuono/audio/AudioEngine.hpp"
+#include "MicroSuono/nodes/GainNode.hpp"
+#include "MicroSuono/nodes/SineNode.hpp"
 #include <iostream>
+#include <memory>
 #include <thread>
-#include <chrono>
-#include "miniaudio.h"
 
 int main() {
-  std::cout << "MicroSuono starting ..." << std::endl;
+  std::cout << "MicroSuono starting..." << std::endl;
 
-  ma_result result;
-  ma_engine engine;
+  // Create the GraphManager
+  ms::GraphManager graph;
 
-  result = ma_engine_init(NULL, &engine);
-  if (result != MA_SUCCESS) {
-    std::cerr << "Failed to initialize audio engine." << std::endl;
+  // Create nodes
+  auto sine = std::make_shared<ms::SineNode>("sine1", 440.0f); // A4 440Hz
+  auto gain = std::make_shared<ms::GainNode>("gain1", 0.2f);   // Gain at 20%
+
+  // Add nodes to the graph
+  graph.createNode("sine1", sine);
+  graph.createNode("gain1", gain);
+
+  // Connect sine -> gain
+  graph.connect("sine1", 0, "gain1", 0);
+
+  // Create and start the audio engine
+  ms::AudioEngine audio(&graph);
+  if (!audio.start(44100, 512)) {
+    std::cerr << "Failed to start audio engine." << std::endl;
     return -1;
   }
 
-  ma_sound sound;
-  result = ma_sound_init_from_file(&engine, "../resources/test.wav", 0, NULL, NULL, &sound);
-  if (result != MA_SUCCESS) {
-    std::cerr << "Failed to load sound file." << std::endl;
-    ma_engine_uninit(&engine);
-    return -1;
-  }
+  std::cout << "Starting audio playback..." << std::endl;
+  std::cout << "You should hear a 440Hz sine wave (A4 note)" << std::endl;
+  std::cout << "Playing for 3 seconds..." << std::endl;
 
-  std::cout << "Playing sound..." << std::endl;
-  ma_sound_start(&sound);
+  // Play for 3 seconds
+  std::this_thread::sleep_for(std::chrono::seconds(3));
 
-  // Aspetta che il suono finisca
-  while (ma_sound_is_playing(&sound)) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+  std::cout << "Stopping..." << std::endl;
+  audio.stop();
 
-  std::cout << "Sound finished playing." << std::endl;
-
-  ma_sound_uninit(&sound);
-  ma_engine_uninit(&engine);
-
+  std::cout << "Done!" << std::endl;
   return 0;
 }

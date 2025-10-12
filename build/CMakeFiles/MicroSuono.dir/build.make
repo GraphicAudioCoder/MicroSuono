@@ -100,19 +100,51 @@ CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/riccardogiovannirosso/development/MicroSuono/src/miniaudio_impl.cpp -o CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.s
 
+CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o: CMakeFiles/MicroSuono.dir/flags.make
+CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o: /Users/riccardogiovannirosso/development/MicroSuono/src/core/GraphManager.cpp
+CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o: CMakeFiles/MicroSuono.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o -MF CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o.d -o CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o -c /Users/riccardogiovannirosso/development/MicroSuono/src/core/GraphManager.cpp
+
+CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/riccardogiovannirosso/development/MicroSuono/src/core/GraphManager.cpp > CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.i
+
+CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/riccardogiovannirosso/development/MicroSuono/src/core/GraphManager.cpp -o CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.s
+
+CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o: CMakeFiles/MicroSuono.dir/flags.make
+CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o: /Users/riccardogiovannirosso/development/MicroSuono/src/audio/AudioEngine.cpp
+CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o: CMakeFiles/MicroSuono.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o -MF CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o.d -o CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o -c /Users/riccardogiovannirosso/development/MicroSuono/src/audio/AudioEngine.cpp
+
+CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/riccardogiovannirosso/development/MicroSuono/src/audio/AudioEngine.cpp > CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.i
+
+CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/riccardogiovannirosso/development/MicroSuono/src/audio/AudioEngine.cpp -o CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.s
+
 # Object files for target MicroSuono
 MicroSuono_OBJECTS = \
 "CMakeFiles/MicroSuono.dir/src/main.cpp.o" \
-"CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o"
+"CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o" \
+"CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o" \
+"CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o"
 
 # External object files for target MicroSuono
 MicroSuono_EXTERNAL_OBJECTS =
 
 MicroSuono: CMakeFiles/MicroSuono.dir/src/main.cpp.o
 MicroSuono: CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o
+MicroSuono: CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o
+MicroSuono: CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o
 MicroSuono: CMakeFiles/MicroSuono.dir/build.make
 MicroSuono: CMakeFiles/MicroSuono.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable MicroSuono"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable MicroSuono"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/MicroSuono.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

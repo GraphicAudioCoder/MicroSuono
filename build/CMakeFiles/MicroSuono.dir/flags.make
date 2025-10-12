@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/riccardogiovannirosso/development/MicroSuono/include
+CXX_INCLUDES = -I/Users/riccardogiovannirosso/development/MicroSuono/include -I/Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono -I/Users/riccardogiovannirosso/development/MicroSuono/engine
 
 CXX_FLAGSarm64 = -std=gnu++17 -arch arm64
 

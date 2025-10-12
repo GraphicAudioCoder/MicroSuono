@@ -86,7 +86,7 @@ clean: CMakeFiles/MicroSuono.dir/clean
 CMakeFiles/clean-all.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clean-all.dir/build.make CMakeFiles/clean-all.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clean-all.dir/build.make CMakeFiles/clean-all.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=4 "Built target clean-all"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=6 "Built target clean-all"
 .PHONY : CMakeFiles/clean-all.dir/all
 
 # Build rule for subdir invocation for target.
@@ -103,7 +103,7 @@ clean-all: CMakeFiles/clean-all.dir/rule
 # codegen rule for target.
 CMakeFiles/clean-all.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clean-all.dir/build.make CMakeFiles/clean-all.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=4 "Finished codegen for target clean-all"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=6 "Finished codegen for target clean-all"
 .PHONY : CMakeFiles/clean-all.dir/codegen
 
 # clean rule for target.
@@ -118,12 +118,12 @@ CMakeFiles/clean-all.dir/clean:
 CMakeFiles/MicroSuono.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=1,2,3 "Built target MicroSuono"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target MicroSuono"
 .PHONY : CMakeFiles/MicroSuono.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/MicroSuono.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles 5
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/MicroSuono.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles 0
 .PHONY : CMakeFiles/MicroSuono.dir/rule
@@ -135,7 +135,7 @@ MicroSuono: CMakeFiles/MicroSuono.dir/rule
 # codegen rule for target.
 CMakeFiles/MicroSuono.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MicroSuono.dir/build.make CMakeFiles/MicroSuono.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=1,2,3 "Finished codegen for target MicroSuono"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/riccardogiovannirosso/development/MicroSuono/build/CMakeFiles --progress-num=1,2,3,4,5 "Finished codegen for target MicroSuono"
 .PHONY : CMakeFiles/MicroSuono.dir/codegen
 
 # clean rule for target.

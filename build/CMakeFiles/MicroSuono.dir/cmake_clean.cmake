@@ -1,4 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o"
+  "CMakeFiles/MicroSuono.dir/src/audio/AudioEngine.cpp.o.d"
+  "CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o"
+  "CMakeFiles/MicroSuono.dir/src/core/GraphManager.cpp.o.d"
   "CMakeFiles/MicroSuono.dir/src/main.cpp.o"
   "CMakeFiles/MicroSuono.dir/src/main.cpp.o.d"
   "CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o"
