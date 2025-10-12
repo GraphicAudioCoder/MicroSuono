@@ -2391,14 +2391,7 @@ CMakeFiles/MicroSuono.dir/src/main.cpp.o: /Users/riccardogiovannirosso/developme
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/ptrcheck.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stdarg.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stddef.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stdint.h \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/GraphManager.hpp \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/Node.hpp \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/audio/AudioEngine.hpp \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/Node.hpp \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/nodes/GainNode.hpp \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/nodes/SineNode.hpp \
-  /Users/riccardogiovannirosso/development/MicroSuono/include/miniaudio.hpp
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stdint.h
 
 CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o: /Users/riccardogiovannirosso/development/MicroSuono/src/miniaudio_impl.cpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AUAudioUnit.h \
@@ -3526,8 +3519,6 @@ CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o: /Users/riccardogiovannirosso
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/make_unsigned.h:
 
-/Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/nodes/SineNode.hpp:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/make_signed.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioFileStream.h:
@@ -3883,8 +3874,6 @@ CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o: /Users/riccardogiovannirosso
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/construct_at.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/swap_allocator.h:
-
-/Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/nodes/GainNode.hpp:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:
 

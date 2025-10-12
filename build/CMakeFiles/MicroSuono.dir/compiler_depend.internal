@@ -2395,13 +2395,6 @@ CMakeFiles/MicroSuono.dir/src/main.cpp.o
  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stdarg.h
  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stddef.h
  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/stdint.h
- /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/GraphManager.hpp
- /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/Node.hpp
- /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/audio/AudioEngine.hpp
- /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/Node.hpp
- /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/nodes/GainNode.hpp
- /Users/riccardogiovannirosso/development/MicroSuono/include/MicroSuono/nodes/SineNode.hpp
- /Users/riccardogiovannirosso/development/MicroSuono/include/miniaudio.hpp
 
 CMakeFiles/MicroSuono.dir/src/miniaudio_impl.cpp.o
  /Users/riccardogiovannirosso/development/MicroSuono/src/miniaudio_impl.cpp
