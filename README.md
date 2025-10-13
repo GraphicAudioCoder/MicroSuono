@@ -1,42 +1,42 @@
 # MicroSuono - Quick Guide
 
-## ⚡ Comandi Essenziali
+## ⚡ Essential Commands
 
 ```bash
-# Configurazione iniziale (prima volta)
+# Initial setup (first time)
 cmake -B build
 
-# Compilare
+# Compile
 cmake --build build
 
-# Eseguire
+# Run
 ./build/MicroSuono
 
-# Compilare + Eseguire
+# Compile + Run
 cmake --build build && ./build/MicroSuono
 
-# Pulire tutto
+# Clean everything
 rm -rf build/
 ```
 
-## 🔧 Dopo aver modificato CMakeLists.txt
+## 🔧 After modifying CMakeLists.txt
 
 ```bash
-cmake -B build              # Riconfigura
-cmake --build build         # Ricompila
-# In Neovim: :LspRestart    # Aggiorna LSP
+cmake -B build              # Reconfigure
+cmake --build build         # Recompile
+# In Neovim: :LspRestart    # Restart LSP
 ```
 
-## 🧹 Pulizia
+## 🧹 Cleaning
 
 ```bash
-# Solo file compilati
+# Only compiled files
 cmake --build build --target clean
 
-# Tutto (rimuove anche config)
+# Everything (removes config as well)
 rm -rf build/
 ```
 
 ---
 
-**Note LSP**: Il file `.clangd` e `CMAKE_EXPORT_COMPILE_COMMANDS` sono già configurati per far funzionare clangd automaticamente.
+**LSP Notes**: The `.clangd` file and `CMAKE_EXPORT_COMPILE_COMMANDS` are already configured to make clangd work automatically.
