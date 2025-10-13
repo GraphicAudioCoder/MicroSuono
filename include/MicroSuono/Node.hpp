@@ -4,31 +4,33 @@
 
 namespace ms {
 
-// Generic parameter for a node
+/** Node parameter structure */
 struct Param {
   std::string name;
   float value;
 };
 
-// Abstract base node class
+/** Abstract base class for all audio/signal processing nodes */
 class Node {
 public:
   Node(const std::string &id, int nInputs = 1, int nOutputs = 1)
-      : id(id), nInputs(nInputs), nOutputs(nOutputs) {}
+    : id(id), nInputs(nInputs), nOutputs(nOutputs) {}
 
   virtual ~Node() = default;
 
-  // Non-realtime preparation (init, buffer allocation, heavy calculations)
+  /** Non-realtime preparation (buffer allocation, initialization) */
   virtual void prepare(int sampleRate, int blockSize) {
     sampleRate_ = sampleRate;
     blockSize_ = blockSize;
   }
 
-  // Realtime audio/value processing
-  // inputs[i] = pointer to the i-th input buffer
-  // outputs[i] = pointer to the i-th output buffer
-  virtual void process(const float *const *inputs, float **outputs,
-                       int nFrames) = 0;
+  /** 
+   * Realtime audio processing
+   * @param inputs Array of input buffer pointers
+   * @param outputs Array of output buffer pointers
+   * @param nFrames Number of frames to process
+   */
+  virtual void process(const float *const *inputs, float **outputs, int nFrames) = 0;
 
   const std::string id;
   int nInputs;

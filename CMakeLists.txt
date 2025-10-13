@@ -21,4 +21,7 @@ add_executable(MicroSuono
   src/main.cpp 
   src/miniaudio_impl.cpp
   src/core/GraphManager.cpp
+  src/audio/AudioEngine.cpp
+  src/nodes/SineNode.cpp
+  src/nodes/GainNode.cpp
 )
