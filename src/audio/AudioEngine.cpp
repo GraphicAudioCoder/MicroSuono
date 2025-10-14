@@ -1,11 +1,12 @@
 #include "MicroSuono/audio/AudioEngine.hpp"
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 namespace ms {
 
 AudioEngine::AudioEngine(GraphManager* graph)
-  : graph_(graph), blockSize_(512), numChannels_(2) {
+  : graph_(graph), blockSize_(512), numOutputChannels_(2), numInputChannels_(0) {
   std::memset(&device_, 0, sizeof(device_));
 }
 
@@ -18,34 +19,60 @@ void AudioEngine::audioCallback(ma_device* pDevice, void* pOutput, const void* p
   if (!engine || !engine->graph_) return;
 
   float* output = (float*)pOutput;
+  const float* input = (const float*)pInput;
   
   // Clear output buffer
-  std::memset(output, 0, frameCount * engine->numChannels_ * sizeof(float));
+  std::memset(output, 0, frameCount * engine->numOutputChannels_ * sizeof(float));
+  
+  // Inject physical input data into GraphManager (before processing)
+  if (input && engine->numInputChannels_ > 0) {
+    // Temporary buffer for deinterleaved input
+    std::vector<float> deinterleavedInput(frameCount);
+    
+    // Deinterleave and set each physical input channel
+    for (int ch = 0; ch < engine->numInputChannels_; ++ch) {
+      // Deinterleave this channel
+      for (ma_uint32 i = 0; i < frameCount; ++i) {
+        deinterleavedInput[i] = input[i * engine->numInputChannels_ + ch];
+      }
+      
+      // Set in GraphManager - any node can now access it
+      engine->graph_->setPhysicalInput(ch, deinterleavedInput.data(), frameCount);
+    }
+  }
   
   // Process graph
   engine->graph_->process(frameCount);
   
   // Map graph outputs to physical channels
-  for (int ch = 0; ch < engine->numChannels_ && ch < (int)engine->channelMappings_.size(); ++ch) {
-    const auto& mapping = engine->channelMappings_[ch];
-    const float* graphOutput = engine->graph_->getNodeOutput(mapping.nodeId, mapping.outputIndex);
+  for (int ch = 0; ch < engine->numOutputChannels_ && ch < (int)engine->outputChannelMappings_.size(); ++ch) {
+    const auto& mapping = engine->outputChannelMappings_[ch];
+    const float* graphOutput = engine->graph_->getNodeOutput(mapping.nodeId, mapping.portIndex);
     
     if (graphOutput) {
       // Interleave channel data
       for (ma_uint32 i = 0; i < frameCount; ++i) {
-        output[i * engine->numChannels_ + ch] = graphOutput[i];
+        output[i * engine->numOutputChannels_ + ch] = graphOutput[i];
       }
     }
   }
 }
 
-bool AudioEngine::start(int sampleRate, int blockSize, int numChannels) {
+bool AudioEngine::start(int sampleRate, int blockSize, int numOutputChannels, int numInputChannels) {
   blockSize_ = blockSize;
-  numChannels_ = numChannels;
+  numOutputChannels_ = numOutputChannels;
+  numInputChannels_ = numInputChannels;
   
-  ma_device_config deviceConfig = ma_device_config_init(ma_device_type_playback);
+  ma_device_type deviceType = ma_device_type_playback;
+  if (numInputChannels_ > 0) {
+    deviceType = ma_device_type_duplex; // Both input and output
+  }
+  
+  ma_device_config deviceConfig = ma_device_config_init(deviceType);
   deviceConfig.playback.format = ma_format_f32;
-  deviceConfig.playback.channels = numChannels_;
+  deviceConfig.playback.channels = numOutputChannels_;
+  deviceConfig.capture.format = ma_format_f32;
+  deviceConfig.capture.channels = numInputChannels_;
   deviceConfig.sampleRate = sampleRate;
   deviceConfig.dataCallback = AudioEngine::audioCallback;
   deviceConfig.pUserData = this;
@@ -63,6 +90,11 @@ bool AudioEngine::start(int sampleRate, int blockSize, int numChannels) {
     return false;
   }
 
+  std::cout << "Audio device started:" << std::endl;
+  std::cout << "  Sample rate: " << device_.sampleRate << " Hz" << std::endl;
+  std::cout << "  Output channels: " << numOutputChannels_ << std::endl;
+  std::cout << "  Input channels: " << numInputChannels_ << std::endl;
+
   return true;
 }
 
@@ -71,16 +103,14 @@ void AudioEngine::stop() {
 }
 
 void AudioEngine::mapOutputChannel(int channelIndex, const std::string& nodeId, int outputIndex) {
-  // Resize if needed
-  if (channelIndex >= (int)channelMappings_.size()) {
-    channelMappings_.resize(channelIndex + 1);
+  if (channelIndex >= (int)outputChannelMappings_.size()) {
+    outputChannelMappings_.resize(channelIndex + 1);
   }
-  
-  channelMappings_[channelIndex] = {nodeId, outputIndex};
+  outputChannelMappings_[channelIndex] = {nodeId, outputIndex};
 }
 
-void AudioEngine::clearChannelMappings() {
-  channelMappings_.clear();
+void AudioEngine::clearOutputChannelMappings() {
+  outputChannelMappings_.clear();
 }
 
 } // namespace ms

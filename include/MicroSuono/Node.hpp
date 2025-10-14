@@ -61,6 +61,11 @@ public:
   const std::string id;
   std::vector<Param> params;
 
+  /** Set GraphManager reference (called by GraphManager during setup)
+   * This allows nodes to access physical inputs
+   */
+  void setGraphManager(class GraphManager* graph) { graphManager_ = graph; }
+
 protected:
   void addInputPort(const std::string& name, PortType type) {
     inputPorts_.push_back(Port(name, type));
@@ -70,11 +75,19 @@ protected:
     outputPorts_.push_back(Port(name, type));
   }
 
+  /** Get physical audio input from hardware (for nodes that need direct hardware access)
+   * @param channelIndex Physical input channel index
+   * @return Pointer to input buffer, or nullptr if not available
+   */
+  const float* getPhysicalInput(int channelIndex) const;
+
   std::vector<Port> inputPorts_;
   std::vector<Port> outputPorts_;
   
   int sampleRate_ = 44100;
   int blockSize_ = 512;
+  
+  class GraphManager* graphManager_ = nullptr;
 };
 
 } // namespace ms

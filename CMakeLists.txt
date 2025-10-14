@@ -20,10 +20,12 @@ add_custom_target(clean-all
 add_executable(MicroSuono
   src/main.cpp 
   src/miniaudio_impl.cpp
+  src/core/Node.cpp
   src/core/GraphManager.cpp
   src/audio/AudioEngine.cpp
   src/nodes/SineNode.cpp
   src/nodes/GainNode.cpp
   src/nodes/ThresholdNode.cpp
   src/nodes/MonoToStereoNode.cpp
+  src/nodes/AudioInputNode.cpp
 )

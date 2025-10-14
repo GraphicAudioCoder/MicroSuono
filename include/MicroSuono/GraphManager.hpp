@@ -55,6 +55,22 @@ public:
   /** Get the output buffer of a specific node */
   const float *getNodeOutput(const std::string &nodeId, int outputIndex = 0) const;
 
+  /** Set physical audio input data (called by AudioEngine before processing)
+   * @param channelIndex Physical input channel index
+   * @param data Input audio data
+   * @param nFrames Number of frames
+   */
+  void setPhysicalInput(int channelIndex, const float* data, int nFrames);
+
+  /** Get physical audio input buffer (for nodes to read from)
+   * @param channelIndex Physical input channel index
+   * @return Pointer to input buffer, or nullptr if invalid
+   */
+  const float* getPhysicalInput(int channelIndex) const;
+
+  /** Get number of physical input channels */
+  int getNumPhysicalInputs() const { return physicalInputBuffers_.size(); }
+
 private:
   void allocateBuffers();
   void sortNodes();
@@ -65,6 +81,9 @@ private:
   std::unordered_map<std::string, std::vector<std::vector<float>>> audioBuffers_;
   std::unordered_map<std::string, std::unordered_map<std::string, ControlValue>> controlValues_;
   std::unordered_map<std::string, std::unordered_map<std::string, std::vector<Event>>> eventBuffers_;
+  
+  // Physical audio input buffers (from hardware)
+  std::vector<std::vector<float>> physicalInputBuffers_;
 
   int sampleRate_ = 44100;
   int blockSize_ = 512;

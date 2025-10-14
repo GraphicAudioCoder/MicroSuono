@@ -15,36 +15,38 @@ public:
   /** Initialize and start the audio device
    * @param sampleRate Sample rate in Hz
    * @param blockSize Number of frames per callback
-   * @param numChannels Number of output channels (default: 2 for stereo)
+   * @param numOutputChannels Number of output channels (default: 2 for stereo)
+   * @param numInputChannels Number of input channels (default: 0, no input)
    */
-  bool start(int sampleRate = 44100, int blockSize = 512, int numChannels = 2);
+  bool start(int sampleRate = 44100, int blockSize = 512, int numOutputChannels = 2, int numInputChannels = 0);
   
   /** Stop the audio device */
   void stop();
 
-  /** Map a graph node output to a physical audio channel
+  /** Map a graph node output to a physical audio output channel
    * @param channelIndex Physical output channel (0 = left, 1 = right, etc.)
    * @param nodeId Node ID to read from
    * @param outputIndex Output port index of the node (default: 0)
    */
   void mapOutputChannel(int channelIndex, const std::string& nodeId, int outputIndex = 0);
 
-  /** Clear all channel mappings */
-  void clearChannelMappings();
+  /** Clear all output channel mappings */
+  void clearOutputChannelMappings();
 
 private:
   static void audioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
 
   struct ChannelMapping {
     std::string nodeId;
-    int outputIndex;
+    int portIndex;
   };
 
   GraphManager* graph_;
   ma_device device_;
   int blockSize_;
-  int numChannels_;
-  std::vector<ChannelMapping> channelMappings_;
+  int numOutputChannels_;
+  int numInputChannels_;
+  std::vector<ChannelMapping> outputChannelMappings_;
 };
 
 } // namespace ms

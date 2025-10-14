@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <cstring>
 
 namespace ms {
 
@@ -113,6 +114,7 @@ void GraphManager::prepare(int sampleRate, int blockSize) {
   blockSize_ = blockSize;
   
   for (auto& node : orderedNodes_) {
+    node->setGraphManager(this);
     node->prepare(sampleRate, blockSize);
   }
   
@@ -241,6 +243,28 @@ const float* GraphManager::getNodeOutput(const std::string& nodeId, int outputIn
   auto it = audioBuffers_.find(nodeId);
   if (it != audioBuffers_.end() && outputIndex < static_cast<int>(it->second.size())) {
     return it->second[outputIndex].data();
+  }
+  return nullptr;
+}
+
+void GraphManager::setPhysicalInput(int channelIndex, const float* data, int nFrames) {
+  // Resize if needed
+  if (channelIndex >= (int)physicalInputBuffers_.size()) {
+    physicalInputBuffers_.resize(channelIndex + 1);
+  }
+  
+  // Resize buffer if needed
+  if (physicalInputBuffers_[channelIndex].size() != (size_t)nFrames) {
+    physicalInputBuffers_[channelIndex].resize(nFrames);
+  }
+  
+  // Copy data
+  std::memcpy(physicalInputBuffers_[channelIndex].data(), data, nFrames * sizeof(float));
+}
+
+const float* GraphManager::getPhysicalInput(int channelIndex) const {
+  if (channelIndex >= 0 && channelIndex < (int)physicalInputBuffers_.size()) {
+    return physicalInputBuffers_[channelIndex].data();
   }
   return nullptr;
 }
