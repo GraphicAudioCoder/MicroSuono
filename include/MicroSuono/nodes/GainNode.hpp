@@ -8,7 +8,10 @@ class GainNode : public Node {
 public:
   GainNode(const std::string& id, float gain = 1.0f);
   
-  void process(const float* const* inputs, float** outputs, int nFrames) override;
+  void process(const float* const* audioInputs, float** audioOutputs, int nFrames) override;
+  void processControl(
+    const std::unordered_map<std::string, ControlValue>& controlInputs,
+    std::unordered_map<std::string, ControlValue>& controlOutputs) override;
   
   void setGain(float gain);
   float getGain() const;

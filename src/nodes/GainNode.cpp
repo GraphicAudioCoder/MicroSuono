@@ -3,15 +3,30 @@
 namespace ms {
 
 GainNode::GainNode(const std::string& id, float gain)
-  : Node(id, 1, 1), gain_(gain) {
+  : Node(id), gain_(gain) {
+  addInputPort("in", PortType::Audio);
+  addInputPort("gain", PortType::Control);
+  addOutputPort("out", PortType::Audio);
   params.push_back({"gain", gain});
 }
 
-void GainNode::process(const float* const* inputs, float** outputs, int nFrames) {
-  if (!inputs || !inputs[0] || !outputs || !outputs[0]) return;
+void GainNode::process(const float* const* audioInputs, float** audioOutputs, int nFrames) {
+  if (!audioInputs || !audioInputs[0] || !audioOutputs || !audioOutputs[0]) return;
 
   for (int i = 0; i < nFrames; ++i) {
-    outputs[0][i] = inputs[0][i] * gain_;
+    audioOutputs[0][i] = audioInputs[0][i] * gain_;
+  }
+}
+
+void GainNode::processControl(
+  const std::unordered_map<std::string, ControlValue>& controlInputs,
+  std::unordered_map<std::string, ControlValue>& controlOutputs) {
+  
+  auto it = controlInputs.find("gain");
+  if (it != controlInputs.end()) {
+    if (std::holds_alternative<float>(it->second)) {
+      setGain(std::get<float>(it->second));
+    }
   }
 }
 

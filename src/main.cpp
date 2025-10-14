@@ -17,7 +17,7 @@ int main() {
 
   graph.createNode("sine", sine);
   graph.createNode("output", gain);
-  graph.connect("sine", 0, "output", 0);
+  graph.connect("sine", "out", "output", "in");
 
   ms::AudioEngine audio(&graph);
   if (!audio.start(44100, 512)) {

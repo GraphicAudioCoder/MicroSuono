@@ -10,7 +10,10 @@ public:
   SineNode(const std::string& id, float frequency = 440.0f);
   
   void prepare(int sampleRate, int blockSize) override;
-  void process(const float* const* inputs, float** outputs, int nFrames) override;
+  void process(const float* const* audioInputs, float** audioOutputs, int nFrames) override;
+  void processControl(
+    const std::unordered_map<std::string, ControlValue>& controlInputs,
+    std::unordered_map<std::string, ControlValue>& controlOutputs) override;
   
   void setFrequency(float freq);
 

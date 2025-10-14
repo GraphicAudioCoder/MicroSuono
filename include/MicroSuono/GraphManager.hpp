@@ -12,9 +12,9 @@ using NodePtr = std::shared_ptr<Node>;
 /** Connection between two nodes */
 struct Connection {
   std::string fromNodeId;
-  int fromOutput;
+  std::string fromPortName;
   std::string toNodeId;
-  int toInput;
+  std::string toPortName;
 };
 
 /** Manages the audio processing graph and node connections */
@@ -32,13 +32,13 @@ public:
   /** Get a node by ID */
   NodePtr getNode(const std::string &id) const;
   
-  /** Connect two nodes */
-  void connect(const std::string &fromId, int fromOutput,
-               const std::string &toId, int toInput);
+  /** Connect two nodes by port name */
+  void connect(const std::string &fromId, const std::string &fromPort,
+               const std::string &toId, const std::string &toPort);
   
   /** Disconnect a specific connection */
-  bool disconnect(const std::string &fromId, int fromOutput,
-                  const std::string &toId, int toInput);
+  bool disconnect(const std::string &fromId, const std::string &fromPort,
+                  const std::string &toId, const std::string &toPort);
   
   /** Remove all connections for a node */
   void disconnectAll(const std::string &nodeId);
@@ -62,7 +62,8 @@ private:
   std::unordered_map<std::string, NodePtr> nodes_;
   std::vector<NodePtr> orderedNodes_;
   std::vector<Connection> connections_;
-  std::unordered_map<std::string, std::vector<std::vector<float>>> nodeBuffers_;
+  std::unordered_map<std::string, std::vector<std::vector<float>>> audioBuffers_;
+  std::unordered_map<std::string, std::unordered_map<std::string, ControlValue>> controlValues_;
 
   int sampleRate_ = 44100;
   int blockSize_ = 512;

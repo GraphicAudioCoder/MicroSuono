@@ -36,7 +36,8 @@ bool GraphManager::removeNode(const std::string& id) {
   );
   
   nodes_.erase(it);
-  nodeBuffers_.erase(id);
+  audioBuffers_.erase(id);
+  controlValues_.erase(id);
   
   std::cout << "Node '" << id << "' removed." << std::endl;
   return true;
@@ -50,8 +51,8 @@ NodePtr GraphManager::getNode(const std::string& id) const {
   return nullptr;
 }
 
-void GraphManager::connect(const std::string& fromId, int fromOutput,
-                           const std::string& toId, int toInput) {
+void GraphManager::connect(const std::string& fromId, const std::string& fromPort,
+                           const std::string& toId, const std::string& toPort) {
   if (nodes_.find(fromId) == nodes_.end()) {
     std::cerr << "Error: Source node '" << fromId << "' not found!" << std::endl;
     return;
@@ -61,23 +62,23 @@ void GraphManager::connect(const std::string& fromId, int fromOutput,
     return;
   }
   
-  connections_.push_back({fromId, fromOutput, toId, toInput});
-  std::cout << "Connected: " << fromId << "[" << fromOutput << "] -> " 
-            << toId << "[" << toInput << "]" << std::endl;
+  connections_.push_back({fromId, fromPort, toId, toPort});
+  std::cout << "Connected: " << fromId << "." << fromPort << " -> " 
+            << toId << "." << toPort << std::endl;
 }
 
-bool GraphManager::disconnect(const std::string& fromId, int fromOutput,
-                              const std::string& toId, int toInput) {
+bool GraphManager::disconnect(const std::string& fromId, const std::string& fromPort,
+                              const std::string& toId, const std::string& toPort) {
   auto it = std::remove_if(connections_.begin(), connections_.end(),
     [&](const Connection& conn) {
-      return conn.fromNodeId == fromId && conn.fromOutput == fromOutput &&
-             conn.toNodeId == toId && conn.toInput == toInput;
+      return conn.fromNodeId == fromId && conn.fromPortName == fromPort &&
+             conn.toNodeId == toId && conn.toPortName == toPort;
     });
   
   if (it != connections_.end()) {
     connections_.erase(it, connections_.end());
-    std::cout << "Disconnected: " << fromId << "[" << fromOutput << "] -> "
-              << toId << "[" << toInput << "]" << std::endl;
+    std::cout << "Disconnected: " << fromId << "." << fromPort << " -> "
+              << toId << "." << toPort << std::endl;
     return true;
   }
   
@@ -100,7 +101,8 @@ void GraphManager::clear() {
   nodes_.clear();
   orderedNodes_.clear();
   connections_.clear();
-  nodeBuffers_.clear();
+  audioBuffers_.clear();
+  controlValues_.clear();
   std::cout << "Graph cleared." << std::endl;
 }
 
@@ -119,14 +121,23 @@ void GraphManager::prepare(int sampleRate, int blockSize) {
 }
 
 void GraphManager::allocateBuffers() {
-  nodeBuffers_.clear();
+  audioBuffers_.clear();
+  controlValues_.clear();
   
   for (auto& [id, node] : nodes_) {
     std::vector<std::vector<float>> buffers;
-    for (int i = 0; i < node->nOutputs; ++i) {
-      buffers.push_back(std::vector<float>(blockSize_, 0.0f));
+    
+    for (const auto& port : node->getOutputPorts()) {
+      if (port.type == PortType::Audio) {
+        buffers.push_back(std::vector<float>(blockSize_, 0.0f));
+      }
     }
-    nodeBuffers_[id] = std::move(buffers);
+    
+    if (!buffers.empty()) {
+      audioBuffers_[id] = std::move(buffers);
+    }
+    
+    controlValues_[id] = std::unordered_map<std::string, ControlValue>();
   }
 }
 
@@ -134,28 +145,78 @@ void GraphManager::process(int nFrames) {
   for (auto& node : orderedNodes_) {
     const std::string& nodeId = node->id;
     
-    std::vector<const float*> inputPtrs(node->nInputs, nullptr);
+    std::unordered_map<std::string, ControlValue> controlInputs;
+    std::vector<const float*> audioInputPtrs;
+    std::vector<float*> audioOutputPtrs;
+    
+    int audioInIdx = 0;
+    for (const auto& port : node->getInputPorts()) {
+      if (port.type == PortType::Audio) {
+        audioInputPtrs.push_back(nullptr);
+      }
+    }
     
     for (const auto& conn : connections_) {
       if (conn.toNodeId == nodeId) {
-        if (nodeBuffers_.find(conn.fromNodeId) != nodeBuffers_.end()) {
-          inputPtrs[conn.toInput] = nodeBuffers_[conn.fromNodeId][conn.fromOutput].data();
+        auto fromNode = nodes_[conn.fromNodeId];
+        
+        int fromIdx = 0;
+        for (const auto& fromPort : fromNode->getOutputPorts()) {
+          if (fromPort.name == conn.fromPortName) {
+            if (fromPort.type == PortType::Audio) {
+              int toIdx = 0;
+              for (const auto& toPort : node->getInputPorts()) {
+                if (toPort.name == conn.toPortName && toPort.type == PortType::Audio) {
+                  if (audioBuffers_.find(conn.fromNodeId) != audioBuffers_.end() && 
+                      fromIdx < audioBuffers_[conn.fromNodeId].size() &&
+                      toIdx < audioInputPtrs.size()) {
+                    audioInputPtrs[toIdx] = audioBuffers_[conn.fromNodeId][fromIdx].data();
+                  }
+                  break;
+                }
+                if (toPort.type == PortType::Audio) toIdx++;
+              }
+            } else if (fromPort.type == PortType::Control) {
+              if (controlValues_.find(conn.fromNodeId) != controlValues_.end()) {
+                auto& fromControls = controlValues_[conn.fromNodeId];
+                if (fromControls.find(conn.fromPortName) != fromControls.end()) {
+                  controlInputs[conn.toPortName] = fromControls[conn.fromPortName];
+                }
+              }
+            }
+            break;
+          }
+          if (fromPort.type == PortType::Audio) fromIdx++;
         }
       }
     }
     
-    std::vector<float*> outputPtrs(node->nOutputs);
-    for (int i = 0; i < node->nOutputs; ++i) {
-      outputPtrs[i] = nodeBuffers_[nodeId][i].data();
+    int audioOutIdx = 0;
+    for (const auto& port : node->getOutputPorts()) {
+      if (port.type == PortType::Audio) {
+        if (audioBuffers_.find(nodeId) != audioBuffers_.end() && 
+            audioOutIdx < audioBuffers_[nodeId].size()) {
+          audioOutputPtrs.push_back(audioBuffers_[nodeId][audioOutIdx].data());
+          audioOutIdx++;
+        }
+      }
     }
     
-    node->process(inputPtrs.data(), outputPtrs.data(), nFrames);
+    std::unordered_map<std::string, ControlValue> controlOutputs;
+    node->processControl(controlInputs, controlOutputs);
+    controlValues_[nodeId] = controlOutputs;
+    
+    node->process(
+      audioInputPtrs.empty() ? nullptr : audioInputPtrs.data(), 
+      audioOutputPtrs.empty() ? nullptr : audioOutputPtrs.data(), 
+      nFrames
+    );
   }
 }
 
 const float* GraphManager::getNodeOutput(const std::string& nodeId, int outputIndex) const {
-  auto it = nodeBuffers_.find(nodeId);
-  if (it != nodeBuffers_.end() && outputIndex < static_cast<int>(it->second.size())) {
+  auto it = audioBuffers_.find(nodeId);
+  if (it != audioBuffers_.end() && outputIndex < static_cast<int>(it->second.size())) {
     return it->second[outputIndex].data();
   }
   return nullptr;
