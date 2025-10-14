@@ -25,4 +25,5 @@ add_executable(MicroSuono
   src/nodes/SineNode.cpp
   src/nodes/GainNode.cpp
   src/nodes/ThresholdNode.cpp
+  src/nodes/MonoToStereoNode.cpp
 )
