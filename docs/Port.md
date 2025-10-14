@@ -13,6 +13,14 @@ Three types:
 `std::variant` that can hold: `float`, `int`, `bool`, or `std::string`.  
 Used for control data like frequency (440.0f), switches (true/false), or labels ("A4").
 
+## Event struct
+Discrete message with:
+- `type`: Event identifier (e.g., "trigger", "noteOn", "bang")
+- `value`: Optional data (ControlValue variant)
+- `sampleOffset`: Sample position within block (0 to blockSize-1)
+
+Used for triggers, note messages, and discrete events that occur at specific sample times.
+
 ---
 
 ## Node Port Storage
@@ -40,4 +48,6 @@ Registration: Call `addInputPort()` / `addOutputPort()` in constructor.
 ## Update Timing
 - **Audio**: Every sample in the block (512 values per ~11.6ms @ 44.1kHz)
 - **Control**: Once per block (~11.6ms @ 44.1kHz)
-- **Event**: Immediate when triggered (non-periodic)
+- **Event**: Any time during block, with sample-accurate timing via `sampleOffset`
+
+Events can be generated at any point during audio processing and include precise timing information.

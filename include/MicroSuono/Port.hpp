@@ -14,6 +14,16 @@ enum class PortType {
 /** Control value types */
 using ControlValue = std::variant<float, int, bool, std::string>;
 
+/** Event message structure */
+struct Event {
+  std::string type;        // Event type (e.g., "trigger", "noteOn", "bang")
+  ControlValue value;      // Optional event data
+  int sampleOffset;        // Sample position within block (0 to blockSize-1)
+  
+  Event(const std::string& type, ControlValue value = 0.0f, int sampleOffset = 0)
+    : type(type), value(value), sampleOffset(sampleOffset) {}
+};
+
 /** Port descriptor */
 struct Port {
   std::string name;

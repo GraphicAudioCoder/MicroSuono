@@ -38,6 +38,7 @@ bool GraphManager::removeNode(const std::string& id) {
   nodes_.erase(it);
   audioBuffers_.erase(id);
   controlValues_.erase(id);
+  eventBuffers_.erase(id);
   
   std::cout << "Node '" << id << "' removed." << std::endl;
   return true;
@@ -103,6 +104,7 @@ void GraphManager::clear() {
   connections_.clear();
   audioBuffers_.clear();
   controlValues_.clear();
+  eventBuffers_.clear();
   std::cout << "Graph cleared." << std::endl;
 }
 
@@ -123,6 +125,7 @@ void GraphManager::prepare(int sampleRate, int blockSize) {
 void GraphManager::allocateBuffers() {
   audioBuffers_.clear();
   controlValues_.clear();
+  eventBuffers_.clear();
   
   for (auto& [id, node] : nodes_) {
     std::vector<std::vector<float>> buffers;
@@ -138,14 +141,23 @@ void GraphManager::allocateBuffers() {
     }
     
     controlValues_[id] = std::unordered_map<std::string, ControlValue>();
+    eventBuffers_[id] = std::unordered_map<std::string, std::vector<Event>>();
   }
 }
 
 void GraphManager::process(int nFrames) {
+  // Clear event buffers at start of each block
+  for (auto& [nodeId, eventPorts] : eventBuffers_) {
+    for (auto& [portName, events] : eventPorts) {
+      events.clear();
+    }
+  }
+  
   for (auto& node : orderedNodes_) {
     const std::string& nodeId = node->id;
     
     std::unordered_map<std::string, ControlValue> controlInputs;
+    std::unordered_map<std::string, std::vector<Event>> eventInputs;
     std::vector<const float*> audioInputPtrs;
     std::vector<float*> audioOutputPtrs;
     
@@ -183,6 +195,13 @@ void GraphManager::process(int nFrames) {
                   controlInputs[conn.toPortName] = fromControls[conn.fromPortName];
                 }
               }
+            } else if (fromPort.type == PortType::Event) {
+              if (eventBuffers_.find(conn.fromNodeId) != eventBuffers_.end()) {
+                auto& fromEvents = eventBuffers_[conn.fromNodeId];
+                if (fromEvents.find(conn.fromPortName) != fromEvents.end()) {
+                  eventInputs[conn.toPortName] = fromEvents[conn.fromPortName];
+                }
+              }
             }
             break;
           }
@@ -205,6 +224,10 @@ void GraphManager::process(int nFrames) {
     std::unordered_map<std::string, ControlValue> controlOutputs;
     node->processControl(controlInputs, controlOutputs);
     controlValues_[nodeId] = controlOutputs;
+    
+    std::unordered_map<std::string, std::vector<Event>> eventOutputs;
+    node->processEvents(eventInputs, eventOutputs);
+    eventBuffers_[nodeId] = eventOutputs;
     
     node->process(
       audioInputPtrs.empty() ? nullptr : audioInputPtrs.data(), 

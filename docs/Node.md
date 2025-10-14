@@ -64,10 +64,17 @@ Order matters: index 0, 1, 2... matches array indices in `process()` buffer argu
 ## Process Methods
 
 **processControl()**
-- Called once per block, before audio processing
+- Called once per block, before events and audio
 - Receives map of control input values by port name
 - Updates internal node state (e.g., frequency, gain)
 - Can write to control output map
+
+**processEvents()**
+- Called once per block, after controls, before audio
+- Receives map of event queues by port name (each queue = vector of Events)
+- Can generate output events at any time during the block
+- Each event has `sampleOffset` for sample-accurate timing
+- Example: Generate "trigger" event when condition is met
 
 **process()**
 - Called once per block for audio processing
@@ -75,3 +82,4 @@ Order matters: index 0, 1, 2... matches array indices in `process()` buffer argu
 - `audioInputs[i]` = pointer to i-th input port buffer
 - `audioOutputs[i]` = pointer to i-th output port buffer
 - Must process exactly `nFrames` samples
+- Can generate events during processing (store them for next block)

@@ -43,6 +43,15 @@ public:
     const std::unordered_map<std::string, ControlValue>& controlInputs,
     std::unordered_map<std::string, ControlValue>& controlOutputs) {}
 
+  /**
+   * Process events (called once per block, before audio processing)
+   * @param eventInputs Map of event queues by port name
+   * @param eventOutputs Map to write output events by port name
+   */
+  virtual void processEvents(
+    const std::unordered_map<std::string, std::vector<Event>>& eventInputs,
+    std::unordered_map<std::string, std::vector<Event>>& eventOutputs) {}
+
   /** Get input port descriptors */
   const std::vector<Port>& getInputPorts() const { return inputPorts_; }
   

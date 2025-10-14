@@ -64,6 +64,7 @@ private:
   std::vector<Connection> connections_;
   std::unordered_map<std::string, std::vector<std::vector<float>>> audioBuffers_;
   std::unordered_map<std::string, std::unordered_map<std::string, ControlValue>> controlValues_;
+  std::unordered_map<std::string, std::unordered_map<std::string, std::vector<Event>>> eventBuffers_;
 
   int sampleRate_ = 44100;
   int blockSize_ = 512;

@@ -7,6 +7,7 @@
 - `connections_`: List of all connections between nodes
 - `audioBuffers_`: Stores audio data for each node's output ports
 - `controlValues_`: Stores control data for each node
+- `eventBuffers_`: Stores event queues for each node's ports
 - `sampleRate_`, `blockSize_`: Audio configuration
 
 ## 1. nodes_
@@ -122,7 +123,32 @@ controlValues_
 - `controlValues_["sine"]["freq"]` = get frequency
 - `controlValues_["gain"]["gain"] = 0.8f` = set gain
 
-## 6. sampleRate_ and blockSize_
+## 6. eventBuffers_
+
+**Type**: `unordered_map<string, unordered_map<string, vector<Event>>>`
+
+**Purpose**: Stores event queues for each node's event ports (nested: node → port → events).
+
+**Structure**:
+```
+eventBuffers_
+┌──────────┬────────────────────────────────┐
+│ "trigger"│ → unordered_map                │
+│          │    ["out"] = [Event{"bang", 0.0, 128}]│
+│ "sequenc"│ → unordered_map                │
+│          │    ["notes"] = [Event{"noteOn", 60, 0},│
+│          │                 Event{"noteOff", 60, 256}]│
+└──────────┴────────────────────────────────┘
+```
+
+Each event has `sampleOffset` for sample-accurate timing within the block.  
+Cleared at the start of each `process()` call.
+
+**Access**:
+- `eventBuffers_["trigger"]["out"]` = vector of events for that port
+- Events can be generated at any time during node processing
+
+## 7. sampleRate_ and blockSize_
 
 Audio configuration set by `prepare()`.  
 Used to allocate buffers and passed to nodes for internal calculations (e.g., oscillator phase increment).
@@ -133,8 +159,8 @@ Used to allocate buffers and passed to nodes for internal calculations (e.g., os
 process(nFrames) called
        ↓
 ┌────────────────────────────────────────┐
-│ 1. Clear all audioBuffers_             │
-│    Fill with zeros                     │
+│ 1. Clear eventBuffers_                 │
+│    Empty all event queues              │
 └────────────────────────────────────────┘
        ↓
 ┌────────────────────────────────────────┐
@@ -149,7 +175,19 @@ process(nFrames) called
 └────────────────────────────────────────┘
        ↓
 ┌────────────────────────────────────────┐
-│ 3. Process audio in orderedNodes_      │
+│ 3. Process events in orderedNodes_     │
+│    For each node:                      │
+│      node->processEvents(              │
+│        eventInputs, eventOutputs)      │
+│                                        │
+│    Example:                            │
+│      threshold: Check if signal > 0.5  │
+│      → Generate Event{"trigger", 1.0, sampleOffset}│
+│      → Store in eventBuffers_["threshold"]["out"]│
+└────────────────────────────────────────┘
+       ↓
+┌────────────────────────────────────────┐
+│ 4. Process audio in orderedNodes_      │
 │    For each node:                      │
 │      Collect input buffer pointers     │
 │      Collect output buffer pointers    │
