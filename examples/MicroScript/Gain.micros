@@ -1,0 +1,9 @@
+node Gain {
+  -> in audio
+  -> gain control = 0.5
+  <- out audio
+
+  @process {
+    out = in * gain
+  }
+}
