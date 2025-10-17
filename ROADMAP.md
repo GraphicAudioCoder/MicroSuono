@@ -1,9 +1,12 @@
 # MicroSuono Development Roadmap
 
 ## Project Vision
+
 Un ambiente di sviluppo audio modulare e real-time, alternativa a Max/MSP e SuperCollider, con:
 - Architettura a nodi grafici interconnessi
 - Linguaggio DSP custom per scripting nodi
+- **Ogni utente può creare nodi che lavorano sample-by-sample, con sintassi semplice e diretta**
+- **Ogni nodo può avere una GUI custom associabile facilmente, anche complessa, per controllare i parametri via mouse, tastiera o sistemi esterni**
 - GUI visuale con ImGui + ImNodes
 - Backend audio leggero e cross-platform (miniaudio)
 - Thread-safe e real-time safe
@@ -36,7 +39,13 @@ Un ambiente di sviluppo audio modulare e real-time, alternativa a Max/MSP e Supe
 ## 🎯 Fase 2: Linguaggio DSP Custom (PRIORITÀ MASSIMA)
 
 ### Obiettivo
+
 Creare un linguaggio di scripting DSP espressivo, sicuro e real-time friendly per definire la logica dei nodi.
+
+**Obiettivi chiave:**
+- L'utente può creare nodi sample-by-sample in modo semplice (come scrivere una funzione C per ogni sample)
+- Ogni nodo può esporre parametri controllabili e associare una GUI custom (slider, curve, toggle, pulsanti, ecc.)
+- La DSL deve permettere di dichiarare quali parametri sono controllabili e come devono essere visualizzati/interfacciati
 
 ### 2.1 Design del Linguaggio
 
@@ -47,6 +56,11 @@ Creare un linguaggio di scripting DSP espressivo, sicuro e real-time friendly pe
 - Nessun garbage collector
 - Nessuna allocazione dinamica in real-time
 - Accesso diretto a input/output/parametri
+
+**GUI custom per nodi:**
+- Ogni nodo può dichiarare una sezione `gui` opzionale, dove specifica il tipo di controlli (slider, curve, toggle, ecc.)
+- Possibilità di associare callback/eventi ai controlli
+- Supporto per layout custom e interfacce complesse (es. filtri grafici, curve, XY pad)
 
 **Esempio sintassi target:**
 ```
@@ -65,6 +79,13 @@ node Oscillator {
       phase += 2*PI * freq / sampleRate
       if phase > 2*PI { phase -= 2*PI }
     }
+  }
+  
+  gui {
+    slider freq min=20 max=20000 label="Frequency"
+    curve response type="slope" label="Filter Slope"
+    toggle bypass label="Bypass"
+    button trigger label="Trigger"
   }
 }
 ```
@@ -127,6 +148,11 @@ node Oscillator {
 - Zoom, pan, minimap
 - Selezione multipla, copy/paste
 
+### 3.1.1 GUI Custom per Nodi
+- Ogni nodo può avere una GUI custom generata automaticamente dalla dichiarazione DSL
+- Supporto per slider, curve, toggle, pulsanti, XY pad, layout custom
+- Possibilità di estendere la GUI con codice C++/ImGui per casi avanzati
+
 ### 3.2 Editor di Codice Integrato
 - Syntax highlighting per il linguaggio DSP
 - Autocompletamento
@@ -142,6 +168,8 @@ Librerie consigliate:
 - Slider, knob, input numerici
 - Waveform/spectrum visualizer
 - Level meters
+
+**Nota:** L'inspector deve supportare la generazione automatica della GUI in base alla dichiarazione DSL del nodo, ma permettere anche override/estensioni custom.
 
 ### 3.4 Audio Scope & Analyzers
 - Oscilloscopio real-time
