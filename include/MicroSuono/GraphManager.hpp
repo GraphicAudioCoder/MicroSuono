@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <mutex>
+#include <atomic>
 
 namespace ms {
 
@@ -74,6 +76,7 @@ public:
 private:
   void allocateBuffers();
   void sortNodes();
+  void allocateBuffersForNode(const std::string& nodeId);
 
   std::unordered_map<std::string, NodePtr> nodes_;
   std::vector<NodePtr> orderedNodes_;
@@ -90,6 +93,11 @@ private:
 
   int sampleRate_ = 44100;
   int blockSize_ = 512;
+  bool isPrepared_ = false;
+  
+  // Thread safety for dynamic modifications
+  mutable std::mutex graphMutex_;
+  std::atomic<bool> needsBufferReallocation_{false};
 };
 
 } // namespace ms
