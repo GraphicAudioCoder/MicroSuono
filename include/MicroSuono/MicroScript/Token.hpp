@@ -31,6 +31,8 @@ enum class TokenType {
   AT_DEFAULT,
   AT_MAX_SIZE,
   AT_OPTIONS,
+  AT_FADEIN,    // @fadein - Configure node fade-in duration
+  AT_FADEOUT,   // @fadeout - Configure node fade-out duration (future)
 
   // Operators
   ARROW_LEFT,  // <-

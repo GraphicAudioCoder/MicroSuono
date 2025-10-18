@@ -24,10 +24,27 @@ public:
   virtual void prepare(int sampleRate, int blockSize) {
     sampleRate_ = sampleRate;
     blockSize_ = blockSize;
-    // Initialize fade-in (50ms default)
-    fadeInSamples_ = static_cast<int>(sampleRate * 0.05f); // 50ms fade-in
+    // Calculate fade-in samples from duration
+    updateFadeInSamples();
     currentFadeSample_ = 0;
-    fadeInActive_ = true;
+    fadeInActive_ = (fadeInDurationMs_ > 0.0f);
+  }
+
+  /** Set fade-in duration in milliseconds
+   * @param durationMs Fade-in duration (0 = disabled, default = 50ms)
+   */
+  void setFadeInDuration(float durationMs) {
+    fadeInDurationMs_ = durationMs;
+    updateFadeInSamples();
+  }
+
+  /** Get current fade-in duration in milliseconds */
+  float getFadeInDuration() const { return fadeInDurationMs_; }
+
+  /** Reset fade-in (useful when re-activating a node) */
+  void resetFadeIn() {
+    currentFadeSample_ = 0;
+    fadeInActive_ = (fadeInDurationMs_ > 0.0f);
   }
 
   /** 
@@ -110,11 +127,18 @@ protected:
   int blockSize_ = 512;
   
   // Fade-in state
+  float fadeInDurationMs_ = 50.0f;  // Default 50ms fade-in
   int fadeInSamples_ = 0;
   int currentFadeSample_ = 0;
   bool fadeInActive_ = false;
   
   class GraphManager* graphManager_ = nullptr;
+
+private:
+  /** Update fade-in samples from duration and sample rate */
+  void updateFadeInSamples() {
+    fadeInSamples_ = static_cast<int>((fadeInDurationMs_ / 1000.0f) * sampleRate_);
+  }
 };
 
 } // namespace ms

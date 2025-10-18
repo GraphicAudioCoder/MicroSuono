@@ -149,6 +149,7 @@ node Volume {
   -> volume control = 0.5 @smooth @min(0) @max(1)
   <- out audio
   
+  @fadein(50ms)  // Smooth start
   @process {
     out = in * volume
   }
@@ -162,6 +163,7 @@ node LowPassFilter {
   -> cutoff control = 1000.0 @smooth @min(20) @max(20000) @unit(Hz)
   <- out audio
   
+  @fadein(30ms)
   @process {
     // coefficienti del filtro calcolati con cutoff smoothato
     // (cutoff viene aggiornato gradualmente)
@@ -178,6 +180,7 @@ node Panner {
   <- left audio
   <- right audio
   
+  @fadein(40ms)
   @process {
     left = in * (1.0 - pan)
     right = in * pan
@@ -192,6 +195,7 @@ node Tremolo {
   -> lfo audio  // Audio-rate input
   <- out audio
   
+  @fadein(0ms)  // No fade-in for modulators
   @process {
     // lfo è audio-rate, no smoothing applicato!
     out = carrier * lfo

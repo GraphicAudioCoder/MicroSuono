@@ -23,6 +23,11 @@ void demo4_tremolo() {
   // Gain node that will be modulated by the LFO
   auto modulatedGain = std::make_shared<ms::GainNode>("modulated_gain", 0.8f);
 
+  // Configure fade-in for smooth start
+  carrier->setFadeInDuration(50.0f);     // 50ms fade for carrier
+  lfo->setFadeInDuration(0.0f);          // No fade for LFO (modulator)
+  modulatedGain->setFadeInDuration(0.0f); // No fade (input already fades)
+
   graph.createNode("carrier", carrier);
   graph.createNode("lfo", lfo);
   graph.createNode("modulated_gain", modulatedGain);
@@ -42,7 +47,8 @@ void demo4_tremolo() {
   std::cout << "  Carrier: 440 Hz (A4)" << std::endl;
   std::cout << "  LFO: 4 Hz (tremolo rate)" << std::endl;
   std::cout << "  Modulation depth: 0.3 to 0.7 (built into LFO)" << std::endl;
-  std::cout << "  Fade-out: 300ms" << std::endl;
+  std::cout << "  Node fade-in: 50ms (carrier), 0ms (LFO, gain)" << std::endl;
+  std::cout << "  Engine fade-out: 300ms" << std::endl;
   std::cout << "\n  Playing tremolo effect for 4 seconds..." << std::endl;
   std::this_thread::sleep_for(std::chrono::seconds(4));
   audio.stop();

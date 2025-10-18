@@ -31,6 +31,8 @@ static const std::unordered_map<TokenType, std::string> tokenNames = {
     {TokenType::AT_DEFAULT, "AT_DEFAULT"},
     {TokenType::AT_MAX_SIZE, "AT_MAX_SIZE"},
     {TokenType::AT_OPTIONS, "AT_OPTIONS"},
+    {TokenType::AT_FADEIN, "AT_FADEIN"},
+    {TokenType::AT_FADEOUT, "AT_FADEOUT"},
 
     // Operators
     {TokenType::ARROW_LEFT, "ARROW_LEFT"},

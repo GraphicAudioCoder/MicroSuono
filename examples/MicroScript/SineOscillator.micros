@@ -6,6 +6,7 @@ node SineOscillator {
 
   phase = 0
 
+  @fadein(30ms)  // Fade-in to prevent click at start
   @process {
     // Generate: offset + amplitude * sin(phase * TAU)
     out = offset + amplitude * sin(phase * TAU)
