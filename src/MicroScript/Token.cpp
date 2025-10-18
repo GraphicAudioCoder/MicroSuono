@@ -43,6 +43,10 @@ static const std::unordered_map<TokenType, std::string> tokenNames = {
     {TokenType::SLASH, "SLASH"},
     {TokenType::PERCENT, "PERCENT"},
     {TokenType::EQUALS, "EQUALS"},
+    {TokenType::PLUS_EQUALS, "PLUS_EQUALS"},
+    {TokenType::MINUS_EQUALS, "MINUS_EQUALS"},
+    {TokenType::STAR_EQUALS, "STAR_EQUALS"},
+    {TokenType::SLASH_EQUALS, "SLASH_EQUALS"},
     {TokenType::EQUALS_EQUALS, "EQUALS_EQUALS"},
     {TokenType::NOT_EQUALS, "NOT_EQUALS"},
     {TokenType::LESS, "LESS"},
@@ -62,6 +66,8 @@ static const std::unordered_map<TokenType, std::string> tokenNames = {
     {TokenType::RBRACKET, "RBRACKET"},
     {TokenType::COMMA, "COMMA"},
     {TokenType::DOT, "DOT"},
+    {TokenType::DOT_DOT, "DOT_DOT"},
+    {TokenType::SEMICOLON, "SEMICOLON"},
 
     // Literals
     {TokenType::NUMBER, "NUMBER"},

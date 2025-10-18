@@ -1,0 +1,38 @@
+// Mixer node with vector inputs
+// Demonstrates array/vector support in MicroScript
+node Mixer {
+  // Vector of audio inputs (4 channels)
+  -> inputs[4] audio
+  
+  // Per-channel gains with smoothing
+  -> gains[4] control = [0.25, 0.25, 0.25, 0.25] @smooth(10ms)
+  
+  // Master gain
+  -> master_gain control = 1.0 @smooth(5ms) @min(0.0) @max(2.0)
+  
+  // Stereo outputs
+  <- out_left audio
+  <- out_right audio
+  
+  @fadein(30ms)
+  
+  @process {
+    // Initialize outputs to zero
+    out_left = 0.0
+    out_right = 0.0
+    
+    // Mix all inputs with their respective gains
+    // Even channels go to left, odd to right (simple stereo panning)
+    for (i in 0..4) {
+      if (i % 2 == 0) {
+        out_left += inputs[i] * gains[i]
+      } else {
+        out_right += inputs[i] * gains[i]
+      }
+    }
+    
+    // Apply master gain to both outputs
+    out_left *= master_gain
+    out_right *= master_gain
+  }
+}

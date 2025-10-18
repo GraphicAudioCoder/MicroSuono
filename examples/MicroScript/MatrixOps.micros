@@ -1,0 +1,64 @@
+// Matrix/2D Vector Operations
+// Multi-band processing with vector of vectors
+node MultibandCompressor {
+  -> input audio
+  -> output audio
+  
+  // 4 frequency bands, each with its own parameters
+  -> band_thresholds[4] control = [-12.0, -18.0, -24.0, -20.0] @unit("dB")
+  -> band_ratios[4] control = [4.0, 3.0, 2.5, 3.5]
+  -> band_gains[4] control = [1.0; 4] @smooth(10ms)
+  
+  // Internal: 2D array - history buffer per band
+  // Each band has 1024 samples of history
+  band_buffers[4][1024] = [[0.0; 1024]; 4]  // Matrix initialization
+  
+  // Per-band envelope followers
+  band_envelopes[4] = [0.0; 4]
+  
+  // Write position (shared across all bands)
+  write_pos = 0
+  
+  // Constants
+  num_bands = 4
+  buffer_size = 1024
+  
+  @process {
+    // Split input into frequency bands (simplified)
+    bands[4] = splitBands(input, num_bands)  // Hypothetical function
+    
+    // Process each band
+    for (b in 0..num_bands) {
+      // Store in circular buffer (2D indexing)
+      band_buffers[b][write_pos] = bands[b]
+      
+      // Envelope detection
+      abs_val = abs(bands[b])
+      if (abs_val > band_envelopes[b]) {
+        band_envelopes[b] = abs_val
+      } else {
+        band_envelopes[b] *= 0.99
+      }
+      
+      // Compression
+      threshold_linear = dbToLinear(band_thresholds[b])
+      
+      if (band_envelopes[b] > threshold_linear) {
+        // Calculate compression
+        over = band_envelopes[b] / threshold_linear
+        compressed = threshold_linear * pow(over, 1.0 / band_ratios[b])
+        gain_reduction = compressed / band_envelopes[b]
+        bands[b] *= gain_reduction
+      }
+      
+      // Apply makeup gain
+      bands[b] *= band_gains[b]
+    }
+    
+    // Mix bands back together
+    output = bands[0] + bands[1] + bands[2] + bands[3]
+    
+    // Advance write position
+    write_pos = (write_pos + 1) % buffer_size
+  }
+}

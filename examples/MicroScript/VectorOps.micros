@@ -1,0 +1,65 @@
+// Advanced Vector Operations Demo
+// Shows SIMD-style operations and internal vector variables
+node VectorProcessor {
+  // Vector inputs
+  -> signal[8] audio        // 8 channels of audio
+  -> gains[8] control = [1.0; 8] @smooth(5ms)  // Repeat syntax: [value; count]
+  
+  // Single control
+  -> threshold control = 0.5 @smooth(10ms)
+  
+  // Vector outputs
+  <- processed[8] audio
+  <- peaks[8] control       // Per-channel peak detection
+  
+  // Internal vector variables (STATE)
+  envelope[8] = [0.0; 8]    // Attack/release envelope followers
+  peak_hold[8] = [0.0; 8]   // Peak hold values
+  smoothed[8] = [0.0; 8]    // Smoothed signals
+  
+  // Internal scalars
+  release_coeff = 0.999
+  attack_coeff = 0.1
+  
+  @fadein(20ms)
+  
+  @process {
+    // SIMD-style vector operations!
+    
+    // Element-wise multiplication (vector * vector)
+    processed = signal * gains
+    
+    // Element-wise absolute value
+    abs_signal = abs(signal)
+    
+    // Envelope follower with attack/release (per-channel)
+    for (i in 0..8) {
+      current = abs_signal[i]
+      
+      // Attack or release
+      if (current > envelope[i]) {
+        envelope[i] = envelope[i] + attack_coeff * (current - envelope[i])
+      } else {
+        envelope[i] = envelope[i] * release_coeff
+      }
+      
+      // Peak detection
+      if (envelope[i] > peak_hold[i]) {
+        peak_hold[i] = envelope[i]
+      } else {
+        peak_hold[i] *= 0.995  // Slow decay
+      }
+      
+      peaks[i] = peak_hold[i]
+      
+      // Smooth and apply threshold
+      if (envelope[i] < threshold) {
+        processed[i] = 0.0  // Gate
+      }
+    }
+    
+    // Alternative: Vector operations without explicit loop
+    // smoothed = lerp(smoothed, abs(signal), 0.1)  // Vector lerp!
+    // processed = signal * step(envelope, threshold)  // Step function
+  }
+}

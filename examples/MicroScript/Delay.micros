@@ -1,0 +1,58 @@
+// Stereo Delay with feedback and mix control
+// Simple yet effective delay line implementation
+node Delay {
+  -> in_left audio
+  -> in_right audio
+  -> delay_time control = 500 @smooth(20ms) @min(1) @max(2000) @unit("ms")
+  -> feedback control = 0.3 @smooth(10ms) @min(0.0) @max(0.95)
+  -> mix control = 0.5 @smooth(5ms) @min(0.0) @max(1.0)
+  <- out_left audio
+  <- out_right audio
+
+  // Internal state
+  buffer delay_buffer_left @max_size(96000)  // 2 seconds at 48kHz
+  buffer delay_buffer_right @max_size(96000)
+  write_pos = 0
+  
+  @fadein(30ms)  // Prevent click at start
+  
+  @prepare {
+    // Initialize buffers
+    delay_buffer_left.clear()
+    delay_buffer_right.clear()
+    write_pos = 0
+  }
+
+  @process {
+    // Calculate delay in samples
+    delay_samples = (delay_time * sampleRate) / 1000
+    
+    // Calculate read position (wrap around)
+    read_pos = write_pos - delay_samples
+    if (read_pos < 0) {
+      read_pos += delay_buffer_left.size()
+    }
+    
+    // Read from delay buffer with interpolation
+    delayed_left = delay_buffer_left[read_pos]
+    delayed_right = delay_buffer_right[read_pos]
+    
+    // Apply feedback
+    buffer_input_left = in_left + (delayed_left * feedback)
+    buffer_input_right = in_right + (delayed_right * feedback)
+    
+    // Write to buffer
+    delay_buffer_left[write_pos] = buffer_input_left
+    delay_buffer_right[write_pos] = buffer_input_right
+    
+    // Output: mix between dry and wet signal
+    out_left = (in_left * (1.0 - mix)) + (delayed_left * mix)
+    out_right = (in_right * (1.0 - mix)) + (delayed_right * mix)
+    
+    // Advance write position
+    write_pos += 1
+    if (write_pos >= delay_buffer_left.size()) {
+      write_pos = 0
+    }
+  }
+}

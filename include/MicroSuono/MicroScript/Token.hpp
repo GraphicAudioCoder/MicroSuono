@@ -43,6 +43,10 @@ enum class TokenType {
   SLASH,
   PERCENT,
   EQUALS,
+  PLUS_EQUALS,    // +=
+  MINUS_EQUALS,   // -=
+  STAR_EQUALS,    // *=
+  SLASH_EQUALS,   // /=
   EQUALS_EQUALS,
   NOT_EQUALS,
   LESS,
@@ -62,6 +66,8 @@ enum class TokenType {
   RBRACKET, // [ ]
   COMMA,
   DOT,
+  DOT_DOT,  // .. (range operator)
+  SEMICOLON, // ; (for array repeat syntax and statements)
 
   // Literals
   NUMBER,

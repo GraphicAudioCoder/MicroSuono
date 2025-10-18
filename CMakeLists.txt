@@ -28,7 +28,9 @@ add_library(MicroSuonoLib STATIC
   src/nodes/ThresholdNode.cpp
   src/nodes/MonoToStereoNode.cpp
   src/nodes/AudioInputNode.cpp
+  src/nodes/MixerNode.cpp
   src/MicroScript/Token.cpp
+  src/MicroScript/Lexer.cpp
 )
 
 # Main executable
@@ -50,3 +52,10 @@ target_link_libraries(demo4_tremolo MicroSuonoLib)
 
 add_executable(demo5_summation examples/demo5_summation.cpp)
 target_link_libraries(demo5_summation MicroSuonoLib)
+
+add_executable(demo7_mixer_vectors examples/demo7_mixer_vectors.cpp)
+target_link_libraries(demo7_mixer_vectors MicroSuonoLib)
+
+# Lexer test executable
+add_executable(test_lexer examples/test_lexer.cpp)
+target_link_libraries(test_lexer MicroSuonoLib)

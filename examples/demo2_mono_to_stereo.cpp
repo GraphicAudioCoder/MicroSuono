@@ -25,6 +25,8 @@ void demo2_monoToStereo() {
   graph.connect("sine", "out", "gain", "in");
   graph.connect("gain", "out", "stereo", "in");
 
+  sine->setFadeInDuration(500.0f);
+
   ms::AudioEngine audio(&graph);
   audio.start(44100, 512, 2, 0);  // 2 outputs, 0 inputs
   audio.setFadeOutDuration(500.0f);  // 500ms fade-out by default
