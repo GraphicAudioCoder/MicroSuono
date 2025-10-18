@@ -2,11 +2,20 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include <thread>
+#include <chrono>
 
 namespace ms {
 
 AudioEngine::AudioEngine(GraphManager* graph)
-  : graph_(graph), blockSize_(512), numOutputChannels_(2), numInputChannels_(0) {
+  : graph_(graph), 
+    blockSize_(512), 
+    numOutputChannels_(2), 
+    numInputChannels_(0),
+    fadeOutDurationMs_(0.0f),
+    fadeOutSamples_(0),
+    currentFadeSample_(0),
+    fadeOutActive_(false) {
   std::memset(&device_, 0, sizeof(device_));
 }
 
@@ -56,6 +65,31 @@ void AudioEngine::audioCallback(ma_device* pDevice, void* pOutput, const void* p
       }
     }
   }
+  
+  // Apply fade-out if active
+  if (engine->fadeOutActive_) {
+    for (ma_uint32 i = 0; i < frameCount; ++i) {
+      if (engine->currentFadeSample_ < engine->fadeOutSamples_) {
+        // Calculate fade-out gain (1.0 -> 0.0)
+        float fadeGain = 1.0f - (static_cast<float>(engine->currentFadeSample_) / engine->fadeOutSamples_);
+        
+        // Apply to all channels
+        for (int ch = 0; ch < engine->numOutputChannels_; ++ch) {
+          output[i * engine->numOutputChannels_ + ch] *= fadeGain;
+        }
+        
+        engine->currentFadeSample_++;
+      } else {
+        // Fade-out complete, mute remaining samples
+        for (ma_uint32 j = i; j < frameCount; ++j) {
+          for (int ch = 0; ch < engine->numOutputChannels_; ++ch) {
+            output[j * engine->numOutputChannels_ + ch] = 0.0f;
+          }
+        }
+        break;
+      }
+    }
+  }
 }
 
 bool AudioEngine::start(int sampleRate, int blockSize, int numOutputChannels, int numInputChannels) {
@@ -83,6 +117,11 @@ bool AudioEngine::start(int sampleRate, int blockSize, int numOutputChannels, in
   }
 
   graph_->prepare(device_.sampleRate, blockSize_);
+  
+  // Reset fade-out state when starting
+  fadeOutActive_ = false;
+  currentFadeSample_ = 0;
+  fadeOutSamples_ = 0;
 
   if (ma_device_start(&device_) != MA_SUCCESS) {
     std::cerr << "Failed to start audio device." << std::endl;
@@ -98,8 +137,28 @@ bool AudioEngine::start(int sampleRate, int blockSize, int numOutputChannels, in
   return true;
 }
 
-void AudioEngine::stop() {
+void AudioEngine::stop(float fadeOutMs) {
+  // Use default fade-out duration if not specified
+  if (fadeOutMs == 0.0f && fadeOutDurationMs_ > 0.0f) {
+    fadeOutMs = fadeOutDurationMs_;
+  }
+  
+  if (fadeOutMs > 0.0f) {
+    // Calculate fade-out samples
+    fadeOutSamples_ = static_cast<int>((fadeOutMs / 1000.0f) * device_.sampleRate);
+    currentFadeSample_ = 0;
+    fadeOutActive_ = true;
+    
+    std::cout << "Fading out over " << fadeOutMs << " ms (" << fadeOutSamples_ << " samples)..." << std::endl;
+    
+    // Wait for fade-out to complete
+    // Sleep slightly longer to ensure all samples are processed
+    int sleepMs = static_cast<int>(fadeOutMs) + 100;
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleepMs));
+  }
+  
   ma_device_uninit(&device_);
+  fadeOutActive_ = false;
 }
 
 void AudioEngine::mapOutputChannel(int channelIndex, const std::string& nodeId, int outputIndex) {

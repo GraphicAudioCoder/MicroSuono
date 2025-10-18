@@ -1,11 +1,14 @@
 node SineOscillator {
   <- out audio
   -> frequency control = 440 @smooth(10ms)
+  -> amplitude control = 1.0 @smooth(5ms)
+  -> offset control = 0.0 @smooth(5ms)
 
   phase = 0
 
   @process {
-    out = sin(phase * TAU)
+    // Generate: offset + amplitude * sin(phase * TAU)
+    out = offset + amplitude * sin(phase * TAU)
     phase += frequency / sampleRate
     if (phase >= 1) {
       phase -= 1

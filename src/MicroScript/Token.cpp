@@ -69,6 +69,7 @@ static const std::unordered_map<TokenType, std::string> tokenNames = {
     {TokenType::FALSE_KW, "FALSE_KW"},
 
     // Special
+    {TokenType::COMMENT, "COMMENT"},
     {TokenType::NEWLINE, "NEWLINE"},
     {TokenType::END_OF_FILE, "END_OF_FILE"}};
 

@@ -24,6 +24,10 @@ public:
   virtual void prepare(int sampleRate, int blockSize) {
     sampleRate_ = sampleRate;
     blockSize_ = blockSize;
+    // Initialize fade-in (50ms default)
+    fadeInSamples_ = static_cast<int>(sampleRate * 0.05f); // 50ms fade-in
+    currentFadeSample_ = 0;
+    fadeInActive_ = true;
   }
 
   /** 
@@ -67,6 +71,24 @@ public:
   void setGraphManager(class GraphManager* graph) { graphManager_ = graph; }
 
 protected:
+  /** Apply fade-in envelope to an audio buffer (called internally)
+   * @param buffer Audio buffer to apply fade-in to
+   * @param nFrames Number of frames in the buffer
+   */
+  void applyFadeIn(float* buffer, int nFrames) {
+    if (!fadeInActive_) return;
+    
+    for (int i = 0; i < nFrames; ++i) {
+      if (currentFadeSample_ < fadeInSamples_) {
+        float fadeGain = static_cast<float>(currentFadeSample_) / fadeInSamples_;
+        buffer[i] *= fadeGain;
+        currentFadeSample_++;
+      } else {
+        fadeInActive_ = false;
+        break;
+      }
+    }
+  }
   void addInputPort(const std::string& name, PortType type) {
     inputPorts_.push_back(Port(name, type));
   }
@@ -86,6 +108,11 @@ protected:
   
   int sampleRate_ = 44100;
   int blockSize_ = 512;
+  
+  // Fade-in state
+  int fadeInSamples_ = 0;
+  int currentFadeSample_ = 0;
+  bool fadeInActive_ = false;
   
   class GraphManager* graphManager_ = nullptr;
 };

@@ -1,113 +1,22 @@
-#include "MicroSuono/GraphManager.hpp"
-#include "MicroSuono/nodes/SineNode.hpp"
-#include "MicroSuono/nodes/GainNode.hpp"
-#include "MicroSuono/nodes/MonoToStereoNode.hpp"
-#include "MicroSuono/nodes/AudioInputNode.hpp"
-#include "MicroSuono/audio/AudioEngine.hpp"
 #include <iostream>
-#include <memory>
-#include <thread>
-#include <chrono>
+#include <string>
 
-void demo1_directStereo() {
-  std::cout << "\n=== Demo 1: Direct Stereo Routing ===" << std::endl;
-  std::cout << "Two independent mono signals → Left and Right channels\n" << std::endl;
-
-  ms::GraphManager graph;
-
-  auto sine1 = std::make_shared<ms::SineNode>("sine1", 440.0f);
-  auto sine2 = std::make_shared<ms::SineNode>("sine2", 554.37f);
-  auto gain1 = std::make_shared<ms::GainNode>("gain1", 0.2f);
-  auto gain2 = std::make_shared<ms::GainNode>("gain2", 0.2f);
-
-  graph.createNode("sine1", sine1);
-  graph.createNode("sine2", sine2);
-  graph.createNode("gain1", gain1);
-  graph.createNode("gain2", gain2);
-  
-  graph.connect("sine1", "out", "gain1", "in");
-  graph.connect("sine2", "out", "gain2", "in");
-
-  ms::AudioEngine audio(&graph);
-  audio.start(44100, 512, 2, 0);  // 2 outputs, 0 inputs
-  audio.mapOutputChannel(0, "gain1", 0);
-  audio.mapOutputChannel(1, "gain2", 0);
-
-  std::cout << "  Left:  440.00 Hz (A4)" << std::endl;
-  std::cout << "  Right: 554.37 Hz (C#5)" << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-  audio.stop();
-}
-
-void demo2_monoToStereo() {
-  std::cout << "\n=== Demo 2: Mono to Stereo with Panning ===" << std::endl;
-  std::cout << "Single mono signal → MonoToStereoNode (center pan) → Stereo\n" << std::endl;
-
-  ms::GraphManager graph;
-
-  auto sine = std::make_shared<ms::SineNode>("sine", 440.0f);
-  auto gain = std::make_shared<ms::GainNode>("gain", 0.2f);
-  auto stereo = std::make_shared<ms::MonoToStereoNode>("stereo", 0.0f);
-
-  graph.createNode("sine", sine);
-  graph.createNode("gain", gain);
-  graph.createNode("stereo", stereo);
-  
-  graph.connect("sine", "out", "gain", "in");
-  graph.connect("gain", "out", "stereo", "in");
-
-  ms::AudioEngine audio(&graph);
-  audio.start(44100, 512, 2, 0);  // 2 outputs, 0 inputs
-  audio.mapOutputChannel(0, "stereo", 0);  // Left
-  audio.mapOutputChannel(1, "stereo", 1);  // Right
-
-  std::cout << "  Both channels: 440 Hz (A4), centered with constant-power panning" << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-  audio.stop();
-}
-
-void demo3_audioInput() {
-  std::cout << "\n=== Demo 3: Audio Input (Microphone Passthrough) ===" << std::endl;
-  std::cout << "Physical input → AudioInputNode → Gain → Stereo output\n" << std::endl;
-  std::cout << "WARNING: Lower your volume to avoid feedback!\n" << std::endl;
-
-  ms::GraphManager graph;
-
-  // AudioInputNode reads from physical channel 0 automatically
-  auto micInput = std::make_shared<ms::AudioInputNode>("mic", 0);
-  auto gain = std::make_shared<ms::GainNode>("gain", 0.3f);
-
-  graph.createNode("mic", micInput);
-  graph.createNode("gain", gain);
-  graph.connect("mic", "out", "gain", "in");
-
-  ms::AudioEngine audio(&graph);
-  audio.start(44100, 512, 2, 1);  // 2 outputs, 1 input (mono mic)
-  audio.mapOutputChannel(0, "gain", 0);  // Left
-  audio.mapOutputChannel(1, "gain", 0);  // Right (duplicate mono to stereo)
-
-  std::cout << "  Recording for 3 seconds... (speak into your microphone)" << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(3));
-  audio.stop();
-  
-  std::cout << "\n  Key point: AudioInputNode uses getPhysicalInput(0) internally" << std::endl;
-  std::cout << "  Any custom node can do the same - no special registration!" << std::endl;
-}
-
-int main() {
+int main(int argc, char* argv[]) {
   std::cout << "╔════════════════════════════════════════╗" << std::endl;
-  std::cout << "║      MicroSuono Complete Demo          ║" << std::endl;
+  std::cout << "║         MicroSuono Test Launcher       ║" << std::endl;
   std::cout << "╚════════════════════════════════════════╝" << std::endl;
-
-  demo1_directStereo();
-  demo2_monoToStereo();
-  demo3_audioInput();
-
-  std::cout << "\n✓ All demos completed!" << std::endl;
-  std::cout << "\nArchitecture summary:" << std::endl;
-  std::cout << "  ✓ Multicanale I/O (N input, M output)" << std::endl;
-  std::cout << "  ✓ Physical inputs accessible to ANY node" << std::endl;
-  std::cout << "  ✓ No special registration needed" << std::endl;
-  std::cout << "  ✓ Ready for DSL node scripting!" << std::endl;
+  std::cout << "\nUsage: " << argv[0] << " [demo_name]\n" << std::endl;
+  std::cout << "Available demos:" << std::endl;
+  std::cout << "  - All demos moved to examples/ folder:" << std::endl;
+  std::cout << "    • demo1_direct_stereo     - Two independent mono signals" << std::endl;
+  std::cout << "    • demo2_mono_to_stereo    - Mono to stereo conversion" << std::endl;
+  std::cout << "    • demo3_audio_input       - Microphone passthrough" << std::endl;
+  std::cout << "    • demo4_tremolo           - Audio-rate modulation (LFO)" << std::endl;
+  std::cout << "    • demo5_summation         - Multiple signals → same input (PD-style)" << std::endl;
+  std::cout << "    • audio_input_demo        - Audio input example" << std::endl;
+  std::cout << "    • multichannel_demo       - Multichannel routing" << std::endl;
+  std::cout << "\nTo run a demo, build and execute it from examples/ folder." << std::endl;
+  std::cout << "Example: ./build/demo5_summation\n" << std::endl;
+  
   return 0;
 }

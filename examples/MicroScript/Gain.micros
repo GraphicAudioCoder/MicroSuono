@@ -1,9 +1,15 @@
+// Gain node with automatic smoothing
+// The @smooth decorator handles all smoothing automatically
 node Gain {
   -> in audio
-  -> gain control = 0.5
+  -> gain control = 1.0 @smooth  // Automatic JSFX-style smoothing!
   <- out audio
 
   @process {
+    // That's it! The system handles:
+    // - Audio-rate modulation (if gain is connected to audio output)
+    // - Control-rate smoothing (if gain is a control parameter)
+    // - All internal state (targetGain, currentGain, deltaGain)
     out = in * gain
   }
 }

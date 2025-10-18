@@ -69,6 +69,7 @@ enum class TokenType {
   FALSE_KW,
 
   // Special
+  COMMENT,
   NEWLINE,
   END_OF_FILE
 };

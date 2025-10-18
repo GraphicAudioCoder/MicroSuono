@@ -27,6 +27,9 @@ void AudioInputNode::process(const float* const* audioInputs, float** audioOutpu
     // No input available, output silence
     std::memset(audioOutputs[0], 0, nFrames * sizeof(float));
   }
+  
+  // Apply fade-in envelope
+  applyFadeIn(audioOutputs[0], nFrames);
 }
 
 } // namespace ms

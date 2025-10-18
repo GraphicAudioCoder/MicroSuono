@@ -84,6 +84,9 @@ private:
   
   // Physical audio input buffers (from hardware)
   std::vector<std::vector<float>> physicalInputBuffers_;
+  
+  // Summation buffers for multiple connections to same input
+  std::vector<std::vector<float>> summationBuffers_;
 
   int sampleRate_ = 44100;
   int blockSize_ = 512;

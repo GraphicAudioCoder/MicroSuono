@@ -20,8 +20,15 @@ public:
    */
   bool start(int sampleRate = 44100, int blockSize = 512, int numOutputChannels = 2, int numInputChannels = 0);
   
-  /** Stop the audio device */
-  void stop();
+  /** Stop the audio device with optional fade-out
+   * @param fadeOutMs Fade-out duration in milliseconds (0 = immediate stop, no fade)
+   */
+  void stop(float fadeOutMs = 0.0f);
+
+  /** Set default fade-out duration for stop()
+   * @param fadeOutMs Fade-out duration in milliseconds
+   */
+  void setFadeOutDuration(float fadeOutMs) { fadeOutDurationMs_ = fadeOutMs; }
 
   /** Map a graph node output to a physical audio output channel
    * @param channelIndex Physical output channel (0 = left, 1 = right, etc.)
@@ -47,6 +54,12 @@ private:
   int numOutputChannels_;
   int numInputChannels_;
   std::vector<ChannelMapping> outputChannelMappings_;
+  
+  // Fade-out state
+  float fadeOutDurationMs_ = 0.0f;
+  int fadeOutSamples_ = 0;
+  int currentFadeSample_ = 0;
+  bool fadeOutActive_ = false;
 };
 
 } // namespace ms

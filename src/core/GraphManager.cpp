@@ -163,13 +163,21 @@ void GraphManager::process(int nFrames) {
     std::vector<const float*> audioInputPtrs;
     std::vector<float*> audioOutputPtrs;
     
-    int audioInIdx = 0;
+    // Count connections per audio input port for summation
+    std::vector<int> audioInputConnectionCount;
+    std::vector<std::vector<const float*>> audioInputSources;
+    
+    // Initialize audio input structures
+    int numAudioInputs = 0;
     for (const auto& port : node->getInputPorts()) {
       if (port.type == PortType::Audio) {
-        audioInputPtrs.push_back(nullptr);
+        numAudioInputs++;
       }
     }
+    audioInputConnectionCount.resize(numAudioInputs, 0);
+    audioInputSources.resize(numAudioInputs);
     
+    // First pass: collect all audio connections to each input
     for (const auto& conn : connections_) {
       if (conn.toNodeId == nodeId) {
         auto fromNode = nodes_[conn.fromNodeId];
@@ -177,18 +185,96 @@ void GraphManager::process(int nFrames) {
         int fromIdx = 0;
         for (const auto& fromPort : fromNode->getOutputPorts()) {
           if (fromPort.name == conn.fromPortName) {
-            if (fromPort.type == PortType::Audio) {
-              int toIdx = 0;
-              for (const auto& toPort : node->getInputPorts()) {
-                if (toPort.name == conn.toPortName && toPort.type == PortType::Audio) {
-                  if (audioBuffers_.find(conn.fromNodeId) != audioBuffers_.end() && 
-                      fromIdx < audioBuffers_[conn.fromNodeId].size() &&
-                      toIdx < audioInputPtrs.size()) {
-                    audioInputPtrs[toIdx] = audioBuffers_[conn.fromNodeId][fromIdx].data();
-                  }
-                  break;
+            // Find target port type and index
+            PortType toPortType = PortType::Audio;
+            int toIdx = -1;
+            int audioPortIdx = 0;
+            for (const auto& toPort : node->getInputPorts()) {
+              if (toPort.name == conn.toPortName) {
+                toPortType = toPort.type;
+                if (toPort.type == PortType::Audio) {
+                  toIdx = audioPortIdx;
                 }
-                if (toPort.type == PortType::Audio) toIdx++;
+                break;
+              }
+              if (toPort.type == PortType::Audio) audioPortIdx++;
+            }
+            
+            if (fromPort.type == PortType::Audio && toPortType == PortType::Audio) {
+              // Collect audio source for summation
+              if (toIdx >= 0 && audioBuffers_.find(conn.fromNodeId) != audioBuffers_.end() && 
+                  fromIdx < audioBuffers_[conn.fromNodeId].size()) {
+                audioInputSources[toIdx].push_back(audioBuffers_[conn.fromNodeId][fromIdx].data());
+                audioInputConnectionCount[toIdx]++;
+              }
+            }
+            break;
+          }
+          if (fromPort.type == PortType::Audio) fromIdx++;
+        }
+      }
+    }
+    
+    // Allocate summation buffers if needed
+    int maxSummationBuffersNeeded = 0;
+    for (int count : audioInputConnectionCount) {
+      if (count > 1) maxSummationBuffersNeeded++;
+    }
+    
+    if (maxSummationBuffersNeeded > (int)summationBuffers_.size()) {
+      summationBuffers_.resize(maxSummationBuffersNeeded);
+      for (auto& buf : summationBuffers_) {
+        buf.resize(blockSize_, 0.0f);
+      }
+    }
+    
+    // Second pass: create audio input pointers with summation
+    int summationBufferIdx = 0;
+    for (int i = 0; i < numAudioInputs; ++i) {
+      if (audioInputConnectionCount[i] == 0) {
+        // No connections: null pointer
+        audioInputPtrs.push_back(nullptr);
+      } else if (audioInputConnectionCount[i] == 1) {
+        // Single connection: direct pointer
+        audioInputPtrs.push_back(audioInputSources[i][0]);
+      } else {
+        // Multiple connections: sum into summation buffer
+        float* sumBuffer = summationBuffers_[summationBufferIdx].data();
+        std::memset(sumBuffer, 0, nFrames * sizeof(float));
+        
+        for (const float* source : audioInputSources[i]) {
+          for (int j = 0; j < nFrames; ++j) {
+            sumBuffer[j] += source[j];
+          }
+        }
+        
+        audioInputPtrs.push_back(sumBuffer);
+        summationBufferIdx++;
+      }
+    }
+    
+    // Process audio→control connections (as additional audio inputs)
+    for (const auto& conn : connections_) {
+      if (conn.toNodeId == nodeId) {
+        auto fromNode = nodes_[conn.fromNodeId];
+        
+        int fromIdx = 0;
+        for (const auto& fromPort : fromNode->getOutputPorts()) {
+          if (fromPort.name == conn.fromPortName) {
+            // Find target port type
+            PortType toPortType = PortType::Audio;
+            for (const auto& toPort : node->getInputPorts()) {
+              if (toPort.name == conn.toPortName) {
+                toPortType = toPort.type;
+                break;
+              }
+            }
+            
+            if (fromPort.type == PortType::Audio && toPortType == PortType::Control) {
+              // Audio output to Control input: add as additional audio input
+              if (audioBuffers_.find(conn.fromNodeId) != audioBuffers_.end() && 
+                  fromIdx < audioBuffers_[conn.fromNodeId].size()) {
+                audioInputPtrs.push_back(audioBuffers_[conn.fromNodeId][fromIdx].data());
               }
             } else if (fromPort.type == PortType::Control) {
               if (controlValues_.find(conn.fromNodeId) != controlValues_.end()) {
