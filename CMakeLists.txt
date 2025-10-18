@@ -56,6 +56,12 @@ target_link_libraries(demo5_summation MicroSuonoLib)
 add_executable(demo7_mixer_vectors examples/demo7_mixer_vectors.cpp)
 target_link_libraries(demo7_mixer_vectors MicroSuonoLib)
 
+add_executable(demo8_beating examples/demo8_beating.cpp)
+target_link_libraries(demo8_beating MicroSuonoLib)
+
+add_executable(demo7_record_wav examples/demo7_record_wav.cpp)
+target_link_libraries(demo7_record_wav MicroSuonoLib)
+
 # Lexer test executable
 add_executable(test_lexer examples/test_lexer.cpp)
 target_link_libraries(test_lexer MicroSuonoLib)

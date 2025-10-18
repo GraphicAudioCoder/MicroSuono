@@ -8,7 +8,11 @@ SineNode::SineNode(const std::string& id, float frequency, float amplitude, floa
     amplitude_(amplitude),
     offset_(offset),
     phase_(0.0f), 
-    phaseIncrement_(0.0f) {
+    phaseIncrement_(0.0f),
+    targetFrequency_(frequency),
+    currentFrequency_(frequency),
+    frequencyDelta_(0.0f),
+    smoothingSamples_(256) {
   addInputPort("frequency", PortType::Control);
   addInputPort("amplitude", PortType::Control);
   addInputPort("offset", PortType::Control);
@@ -21,17 +25,31 @@ SineNode::SineNode(const std::string& id, float frequency, float amplitude, floa
 void SineNode::prepare(int sampleRate, int blockSize) {
   Node::prepare(sampleRate, blockSize);
   phase_ = 0.0f;
+  currentFrequency_ = frequency_;
+  targetFrequency_ = frequency_;
   phaseIncrement_ = 2.0f * M_PI * frequency_ / static_cast<float>(sampleRate);
+  
+  // Set smoothing time (e.g., 5ms for frequency changes)
+  smoothingSamples_ = static_cast<int>((5.0f / 1000.0f) * sampleRate);
+  if (smoothingSamples_ < 1) smoothingSamples_ = 1;
+  frequencyDelta_ = 0.0f;
 }
 
 void SineNode::process(const float* const* audioInputs, float** audioOutputs, int nFrames) {
   if (!audioOutputs || !audioOutputs[0]) return;
 
   for (int i = 0; i < nFrames; ++i) {
+    // Smooth frequency changes
+    if (std::abs(currentFrequency_ - targetFrequency_) > 0.01f) {
+      currentFrequency_ += frequencyDelta_;
+      phaseIncrement_ = 2.0f * M_PI * currentFrequency_ / static_cast<float>(sampleRate_);
+    }
+    
     // Generate sine: offset + amplitude * sin(phase)
     audioOutputs[0][i] = offset_ + amplitude_ * std::sin(phase_);
     phase_ += phaseIncrement_;
     
+    // Wrap phase to avoid numerical drift
     if (phase_ >= 2.0f * M_PI) {
       phase_ -= 2.0f * M_PI;
     }
@@ -63,7 +81,8 @@ void SineNode::processControl(
 
 void SineNode::setFrequency(float freq) {
   frequency_ = freq;
-  phaseIncrement_ = 2.0f * M_PI * frequency_ / static_cast<float>(sampleRate_);
+  targetFrequency_ = freq;
+  frequencyDelta_ = (targetFrequency_ - currentFrequency_) / smoothingSamples_;
   params[0].value = freq;
 }
 

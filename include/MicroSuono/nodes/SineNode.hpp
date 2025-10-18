@@ -25,6 +25,12 @@ private:
   float offset_;
   float phase_;
   float phaseIncrement_;
+  
+  // Smoothing for frequency changes to avoid phase discontinuities
+  float targetFrequency_;
+  float currentFrequency_;
+  float frequencyDelta_;
+  int smoothingSamples_;
 };
 
 } // namespace ms
