@@ -29,6 +29,8 @@ add_library(MicroSuonoLib STATIC
   src/nodes/MonoToStereoNode.cpp
   src/nodes/AudioInputNode.cpp
   src/nodes/MixerNode.cpp
+  src/nodes/SliderNode.cpp
+  src/nodes/SineOscillatorNode.cpp
   src/MicroScript/Token.cpp
   src/MicroScript/Lexer.cpp
 )
@@ -67,6 +69,9 @@ target_link_libraries(demo9_dynamic_connections MicroSuonoLib)
 
 add_executable(demo10_live_patching examples/demo10_live_patching.cpp)
 target_link_libraries(demo10_live_patching MicroSuonoLib)
+
+add_executable(demo11_slider_control examples/demo11_slider_control.cpp)
+target_link_libraries(demo11_slider_control MicroSuonoLib)
 
 # Lexer test executable
 add_executable(test_lexer examples/test_lexer.cpp)

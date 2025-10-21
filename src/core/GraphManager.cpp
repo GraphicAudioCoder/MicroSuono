@@ -290,7 +290,16 @@ void GraphManager::process(int nFrames) {
       }
     }
     
-    // Process audio→control connections (as additional audio inputs)
+    // Process cross-type connections with automatic conversion
+    // This system is "typed but permissive" - any port can connect to any other port
+    // with automatic conversion based on the table:
+    //
+    // From\To  | Audio                    | Control              | Event
+    // ---------+--------------------------+----------------------+------------------
+    // Audio    | Direct (zero-copy)       | Last sample          | Threshold trigger
+    // Control  | Replicate across buffer  | Direct               | On value change
+    // Event    | Audio impulse            | Event value          | Direct
+    //
     for (const auto& conn : connections_) {
       if (conn.toNodeId == nodeId) {
         auto fromNode = nodes_[conn.fromNodeId];
@@ -307,27 +316,98 @@ void GraphManager::process(int nFrames) {
               }
             }
             
-            if (fromPort.type == PortType::Audio && toPortType == PortType::Control) {
-              // Audio output to Control input: add as additional audio input
+            // === AUDIO OUTPUT ===
+            if (fromPort.type == PortType::Audio) {
               if (audioBuffers_.find(conn.fromNodeId) != audioBuffers_.end() && 
                   fromIdx < audioBuffers_[conn.fromNodeId].size()) {
-                audioInputPtrs.push_back(audioBuffers_[conn.fromNodeId][fromIdx].data());
-              }
-            } else if (fromPort.type == PortType::Control) {
-              if (controlValues_.find(conn.fromNodeId) != controlValues_.end()) {
-                auto& fromControls = controlValues_[conn.fromNodeId];
-                if (fromControls.find(conn.fromPortName) != fromControls.end()) {
-                  controlInputs[conn.toPortName] = fromControls[conn.fromPortName];
-                }
-              }
-            } else if (fromPort.type == PortType::Event) {
-              if (eventBuffers_.find(conn.fromNodeId) != eventBuffers_.end()) {
-                auto& fromEvents = eventBuffers_[conn.fromNodeId];
-                if (fromEvents.find(conn.fromPortName) != fromEvents.end()) {
-                  eventInputs[conn.toPortName] = fromEvents[conn.fromPortName];
+                const float* audioBuffer = audioBuffers_[conn.fromNodeId][fromIdx].data();
+                
+                if (toPortType == PortType::Audio) {
+                  // Audio → Audio: Already handled in first pass (summation logic)
+                  // Nothing to do here
+                } else if (toPortType == PortType::Control) {
+                  // Audio → Control: Take last sample of buffer
+                  controlInputs[conn.toPortName] = audioBuffer[nFrames - 1];
+                } else if (toPortType == PortType::Event) {
+                  // Audio → Event: Generate trigger when crossing threshold (future feature)
+                  // For now, we'll skip this - can be added later
                 }
               }
             }
+            // === CONTROL OUTPUT ===
+            else if (fromPort.type == PortType::Control) {
+              if (controlValues_.find(conn.fromNodeId) != controlValues_.end()) {
+                auto& fromControls = controlValues_[conn.fromNodeId];
+                if (fromControls.find(conn.fromPortName) != fromControls.end()) {
+                  const ControlValue& controlValue = fromControls[conn.fromPortName];
+                  
+                  if (toPortType == PortType::Audio) {
+                    // Control → Audio: Replicate value across entire buffer
+                    // We need a conversion buffer for this
+                    // Allocate a conversion buffer if needed
+                    static thread_local std::vector<std::vector<float>> controlToAudioBuffers;
+                    if (controlToAudioBuffers.empty()) {
+                      controlToAudioBuffers.resize(16); // Support up to 16 simultaneous conversions
+                      for (auto& buf : controlToAudioBuffers) {
+                        buf.resize(blockSize_);
+                      }
+                    }
+                    
+                    // Find an available buffer
+                    static thread_local int bufferIdx = 0;
+                    int useBufferIdx = bufferIdx % controlToAudioBuffers.size();
+                    bufferIdx++;
+                    
+                    float* conversionBuffer = controlToAudioBuffers[useBufferIdx].data();
+                    
+                    // Fill buffer with control value
+                    float fillValue = 0.0f;
+                    if (std::holds_alternative<float>(controlValue)) {
+                      fillValue = std::get<float>(controlValue);
+                    } else if (std::holds_alternative<int>(controlValue)) {
+                      fillValue = static_cast<float>(std::get<int>(controlValue));
+                    } else if (std::holds_alternative<bool>(controlValue)) {
+                      fillValue = std::get<bool>(controlValue) ? 1.0f : 0.0f;
+                    }
+                    
+                    for (int i = 0; i < nFrames; ++i) {
+                      conversionBuffer[i] = fillValue;
+                    }
+                    
+                    audioInputPtrs.push_back(conversionBuffer);
+                  } else if (toPortType == PortType::Control) {
+                    // Control → Control: Direct passthrough
+                    controlInputs[conn.toPortName] = controlValue;
+                  } else if (toPortType == PortType::Event) {
+                    // Control → Event: Generate event on value change (future feature)
+                    // For now, skip this - can be added with value tracking
+                  }
+                }
+              }
+            }
+            // === EVENT OUTPUT ===
+            else if (fromPort.type == PortType::Event) {
+              if (eventBuffers_.find(conn.fromNodeId) != eventBuffers_.end()) {
+                auto& fromEvents = eventBuffers_[conn.fromNodeId];
+                if (fromEvents.find(conn.fromPortName) != fromEvents.end()) {
+                  const std::vector<Event>& events = fromEvents[conn.fromPortName];
+                  
+                  if (toPortType == PortType::Audio) {
+                    // Event → Audio: Generate impulses at event sample positions (future feature)
+                    // For now, skip this - requires impulse generation
+                  } else if (toPortType == PortType::Control) {
+                    // Event → Control: Use value from last event in buffer
+                    if (!events.empty()) {
+                      controlInputs[conn.toPortName] = events.back().value;
+                    }
+                  } else if (toPortType == PortType::Event) {
+                    // Event → Event: Direct passthrough
+                    eventInputs[conn.toPortName] = events;
+                  }
+                }
+              }
+            }
+            
             break;
           }
           if (fromPort.type == PortType::Audio) fromIdx++;
