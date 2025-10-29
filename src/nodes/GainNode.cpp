@@ -21,7 +21,15 @@ void GainNode::prepare(int sampleRate, int blockSize) {
 }
 
 void GainNode::process(const float* const* audioInputs, float** audioOutputs, int nFrames) {
-  if (!audioInputs || !audioInputs[0] || !audioOutputs || !audioOutputs[0]) return;
+  if (!audioOutputs || !audioOutputs[0]) return;
+
+  // If no valid input, output silence
+  if (!audioInputs || !audioInputs[0]) {
+    for (int i = 0; i < nFrames; ++i) {
+      audioOutputs[0][i] = 0.0f;
+    }
+    return;
+  }
 
   // Check if we have audio-rate modulation (second audio input from audio->control connection)
   if (audioInputs[1] != nullptr) {

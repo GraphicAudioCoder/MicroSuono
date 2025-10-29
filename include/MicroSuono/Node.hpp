@@ -9,7 +9,7 @@ namespace ms {
 /** Node parameter structure */
 struct Param {
   std::string name;
-  float value;
+  ControlValue value;
 };
 
 /** Abstract base class for all audio/signal processing nodes */
