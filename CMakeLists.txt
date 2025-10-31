@@ -76,6 +76,9 @@ target_link_libraries(demo11_slider_control MicroSuonoLib)
 add_executable(demo_param_types examples/demo_param_types.cpp)
 target_link_libraries(demo_param_types MicroSuonoLib)
 
-# Lexer test executable
+# Test executables
 add_executable(test_lexer examples/test_lexer.cpp)
 target_link_libraries(test_lexer MicroSuonoLib)
+
+add_executable(test_node_refactoring examples/test_node_refactoring.cpp)
+target_link_libraries(test_node_refactoring MicroSuonoLib)

@@ -27,10 +27,10 @@ class MultiParamNode : public Node {
 public:
   MultiParamNode() : Node("MultiParamDemo") {
     // Add parameters of different types
-    params.push_back({"gain", 0.5f});                    // float
-    params.push_back({"octave", 0});                     // int
-    params.push_back({"bypass", false});                 // bool
-    params.push_back({"mode", std::string("normal")});   // string
+    getParams().push_back({"gain", 0.5f});                    // float
+    getParams().push_back({"octave", 0});                     // int
+    getParams().push_back({"bypass", false});                 // bool
+    getParams().push_back({"mode", std::string("normal")});   // string
     
     addInputPort("audio_in", PortType::Audio);
     addOutputPort("audio_out", PortType::Audio);
@@ -38,6 +38,7 @@ public:
   
   void process(const float *const *audioInputs, float **audioOutputs, int nFrames) override {
     // Demo processing that uses the parameters
+    const auto& params = getParams();
     float gain = std::get<float>(params[0].value);
     int octave = std::get<int>(params[1].value);
     bool bypass = std::get<bool>(params[2].value);
@@ -83,38 +84,40 @@ int main() {
   MultiParamNode node;
   
   std::cout << "Initial parameters:" << std::endl;
-  for (const auto& param : node.params) {
+  for (const auto& param : node.getParams()) {
     printControlValue(param.name, param.value);
   }
   std::cout << std::endl;
   
-  // Modify parameters
+  // Modify parameters using setter
   std::cout << "Modifying parameters..." << std::endl;
-  node.params[0].value = 0.75f;                    // Change gain
-  node.params[1].value = -2;                       // Change octave
-  node.params[2].value = true;                     // Enable bypass
-  node.params[3].value = std::string("saturate");  // Change mode
+  node.setParam("gain", 0.75f);
+  node.setParam("octave", -2);
+  node.setParam("bypass", true);
+  node.setParam("mode", std::string("saturate"));
   std::cout << std::endl;
   
   std::cout << "Updated parameters:" << std::endl;
-  for (const auto& param : node.params) {
+  for (const auto& param : node.getParams()) {
     printControlValue(param.name, param.value);
   }
   std::cout << std::endl;
   
   // Demonstrate type safety
   std::cout << "Type checking example:" << std::endl;
-  if (std::holds_alternative<float>(node.params[0].value)) {
-    std::cout << "✓ params[0] (gain) is correctly a float" << std::endl;
+  const ControlValue* gainParam = node.getParam("gain");
+  const ControlValue* bypassParam = node.getParam("bypass");
+  if (gainParam && std::holds_alternative<float>(*gainParam)) {
+    std::cout << "✓ gain is correctly a float" << std::endl;
   }
-  if (std::holds_alternative<bool>(node.params[2].value)) {
-    std::cout << "✓ params[2] (bypass) is correctly a bool" << std::endl;
+  if (bypassParam && std::holds_alternative<bool>(*bypassParam)) {
+    std::cout << "✓ bypass is correctly a bool" << std::endl;
   }
   std::cout << std::endl;
   
   // Simulate audio processing
   std::cout << "Simulating audio processing with bypass=" 
-            << (std::get<bool>(node.params[2].value) ? "ON" : "OFF") << std::endl;
+            << (bypassParam && std::get<bool>(*bypassParam) ? "ON" : "OFF") << std::endl;
   
   const int blockSize = 8;
   float inputBuffer[blockSize] = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f};
@@ -140,9 +143,10 @@ int main() {
   std::cout << std::endl;
   
   // Now turn bypass off and try again
-  node.params[2].value = false;
+  node.setParam("bypass", false);
+  gainParam = node.getParam("gain");
   std::cout << "Simulating with bypass=OFF and gain=" 
-            << std::get<float>(node.params[0].value) << std::endl;
+            << (gainParam ? std::get<float>(*gainParam) : 0.0f) << std::endl;
   
   node.process(inputs, outputs, blockSize);
   

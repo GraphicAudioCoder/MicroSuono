@@ -5,6 +5,13 @@
 #include <thread>
 #include <chrono>
 
+
+/**
+ * @file AudioEngine.cpp
+ * @brief Implements AudioEngine: device management, audio callback, and output mapping.
+ *
+ * Only implementation details and non-trivial logic are commented here, as API documentation is in the header.
+ */
 namespace ms {
 
 AudioEngine::AudioEngine(GraphManager* graph)
@@ -23,6 +30,15 @@ AudioEngine::~AudioEngine() {
   stop();
 }
 
+/**
+ * @brief Audio device callback for real-time streaming.
+ *
+ * Handles input injection, graph processing, output mapping, and fade-out envelope.
+ * @param pDevice Pointer to miniaudio device
+ * @param pOutput Output buffer
+ * @param pInput Input buffer
+ * @param frameCount Number of frames to process
+ */
 void AudioEngine::audioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
   AudioEngine* engine = (AudioEngine*)pDevice->pUserData;
   if (!engine || !engine->graph_) return;
@@ -92,6 +108,9 @@ void AudioEngine::audioCallback(ma_device* pDevice, void* pOutput, const void* p
   }
 }
 
+/**
+ * @brief Initialize and start the audio device, preparing the graph and setting up streaming.
+ */
 bool AudioEngine::start(int sampleRate, int blockSize, int numOutputChannels, int numInputChannels) {
   blockSize_ = blockSize;
   numOutputChannels_ = numOutputChannels;
@@ -137,6 +156,9 @@ bool AudioEngine::start(int sampleRate, int blockSize, int numOutputChannels, in
   return true;
 }
 
+/**
+ * @brief Stop the audio device, optionally applying a fade-out envelope.
+ */
 void AudioEngine::stop(float fadeOutMs) {
   // Use default fade-out duration if not specified
   if (fadeOutMs == 0.0f && fadeOutDurationMs_ > 0.0f) {
@@ -161,6 +183,9 @@ void AudioEngine::stop(float fadeOutMs) {
   fadeOutActive_ = false;
 }
 
+/**
+ * @brief Map a graph node output to a physical output channel for playback.
+ */
 void AudioEngine::mapOutputChannel(int channelIndex, const std::string& nodeId, int outputIndex) {
   if (channelIndex >= (int)outputChannelMappings_.size()) {
     outputChannelMappings_.resize(channelIndex + 1);
@@ -168,6 +193,9 @@ void AudioEngine::mapOutputChannel(int channelIndex, const std::string& nodeId, 
   outputChannelMappings_[channelIndex] = {nodeId, outputIndex};
 }
 
+/**
+ * @brief Clear all output channel mappings.
+ */
 void AudioEngine::clearOutputChannelMappings() {
   outputChannelMappings_.clear();
 }

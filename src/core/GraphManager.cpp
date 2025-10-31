@@ -4,12 +4,28 @@
 #include <string>
 #include <cstring>
 
+
+/**
+ * @file GraphManager.cpp
+ * @brief Implements GraphManager: node management, connection logic, buffer allocation, and graph processing.
+ *
+ * Only implementation details and non-trivial logic are commented here, as API documentation is in the header.
+ */
 namespace ms {
 
+/**
+ * @brief Default constructor for GraphManager.
+ */
 GraphManager::GraphManager() {}
 
+/**
+ * @brief Destructor for GraphManager.
+ */
 GraphManager::~GraphManager() {}
 
+/**
+ * @brief Add a node to the graph, preparing and allocating buffers if needed.
+ */
 NodePtr GraphManager::createNode(const std::string& id, NodePtr node) {
   std::lock_guard<std::mutex> lock(graphMutex_);
   
@@ -32,6 +48,9 @@ NodePtr GraphManager::createNode(const std::string& id, NodePtr node) {
   return node;
 }
 
+/**
+ * @brief Remove a node and all its connections from the graph.
+ */
 bool GraphManager::removeNode(const std::string& id) {
   std::lock_guard<std::mutex> lock(graphMutex_);
   
@@ -45,7 +64,7 @@ bool GraphManager::removeNode(const std::string& id) {
   
   orderedNodes_.erase(
     std::remove_if(orderedNodes_.begin(), orderedNodes_.end(),
-      [&id](const NodePtr& node) { return node->id == id; }),
+      [&id](const NodePtr& node) { return node->getId() == id; }),
     orderedNodes_.end()
   );
   
@@ -58,6 +77,9 @@ bool GraphManager::removeNode(const std::string& id) {
   return true;
 }
 
+/**
+ * @brief Get a node by its unique identifier.
+ */
 NodePtr GraphManager::getNode(const std::string& id) const {
   auto it = nodes_.find(id);
   if (it != nodes_.end()) {
@@ -66,6 +88,9 @@ NodePtr GraphManager::getNode(const std::string& id) const {
   return nullptr;
 }
 
+/**
+ * @brief Connect two nodes by port name, adding a directed link in the graph.
+ */
 void GraphManager::connect(const std::string& fromId, const std::string& fromPort,
                            const std::string& toId, const std::string& toPort) {
   std::lock_guard<std::mutex> lock(graphMutex_);
@@ -84,6 +109,9 @@ void GraphManager::connect(const std::string& fromId, const std::string& fromPor
             << toId << "." << toPort << std::endl;
 }
 
+/**
+ * @brief Disconnect a specific connection between two nodes.
+ */
 bool GraphManager::disconnect(const std::string& fromId, const std::string& fromPort,
                               const std::string& toId, const std::string& toPort) {
   std::lock_guard<std::mutex> lock(graphMutex_);
@@ -105,6 +133,9 @@ bool GraphManager::disconnect(const std::string& fromId, const std::string& from
   return false;
 }
 
+/**
+ * @brief Remove all connections for a given node.
+ */
 void GraphManager::disconnectAll(const std::string& nodeId) {
   connections_.erase(
     std::remove_if(connections_.begin(), connections_.end(),
@@ -116,6 +147,9 @@ void GraphManager::disconnectAll(const std::string& nodeId) {
   std::cout << "All connections for node '" << nodeId << "' removed." << std::endl;
 }
 
+/**
+ * @brief Clear the entire graph, removing all nodes and connections.
+ */
 void GraphManager::clear() {
   nodes_.clear();
   orderedNodes_.clear();
@@ -126,6 +160,9 @@ void GraphManager::clear() {
   std::cout << "Graph cleared." << std::endl;
 }
 
+/**
+ * @brief Prepare all nodes and allocate buffers for audio processing.
+ */
 void GraphManager::prepare(int sampleRate, int blockSize) {
   std::lock_guard<std::mutex> lock(graphMutex_);
   
@@ -144,6 +181,9 @@ void GraphManager::prepare(int sampleRate, int blockSize) {
             << blockSize << " samples/block" << std::endl;
 }
 
+/**
+ * @brief Allocate audio, control, and event buffers for all nodes in the graph.
+ */
 void GraphManager::allocateBuffers() {
   audioBuffers_.clear();
   controlValues_.clear();
@@ -154,6 +194,9 @@ void GraphManager::allocateBuffers() {
   }
 }
 
+/**
+ * @brief Allocate buffers for a specific node, based on its ports.
+ */
 void GraphManager::allocateBuffersForNode(const std::string& nodeId) {
   auto it = nodes_.find(nodeId);
   if (it == nodes_.end()) return;
@@ -175,6 +218,11 @@ void GraphManager::allocateBuffersForNode(const std::string& nodeId) {
   eventBuffers_[nodeId] = std::unordered_map<std::string, std::vector<Event>>();
 }
 
+/**
+ * @brief Process all nodes in the graph for one audio block.
+ *
+ * Handles connection logic, summation, cross-type conversion, and invokes node processing methods.
+ */
 void GraphManager::process(int nFrames) {
   // Try to acquire lock - if graph is being modified, use previous state
   // This prevents audio glitches from blocking on mutex
@@ -193,7 +241,7 @@ void GraphManager::process(int nFrames) {
   }
   
   for (auto& node : orderedNodes_) {
-    const std::string& nodeId = node->id;
+    const std::string& nodeId = node->getId();
     
     std::unordered_map<std::string, ControlValue> controlInputs;
     std::unordered_map<std::string, std::vector<Event>> eventInputs;
@@ -442,6 +490,9 @@ void GraphManager::process(int nFrames) {
   }
 }
 
+/**
+ * @brief Get the output buffer for a node and output port index.
+ */
 const float* GraphManager::getNodeOutput(const std::string& nodeId, int outputIndex) const {
   auto it = audioBuffers_.find(nodeId);
   if (it != audioBuffers_.end() && outputIndex < static_cast<int>(it->second.size())) {
@@ -450,6 +501,9 @@ const float* GraphManager::getNodeOutput(const std::string& nodeId, int outputIn
   return nullptr;
 }
 
+/**
+ * @brief Set physical audio input data for a given channel.
+ */
 void GraphManager::setPhysicalInput(int channelIndex, const float* data, int nFrames) {
   // Resize if needed
   if (channelIndex >= (int)physicalInputBuffers_.size()) {
@@ -465,6 +519,9 @@ void GraphManager::setPhysicalInput(int channelIndex, const float* data, int nFr
   std::memcpy(physicalInputBuffers_[channelIndex].data(), data, nFrames * sizeof(float));
 }
 
+/**
+ * @brief Get pointer to physical audio input buffer for a given channel.
+ */
 const float* GraphManager::getPhysicalInput(int channelIndex) const {
   if (channelIndex >= 0 && channelIndex < (int)physicalInputBuffers_.size()) {
     return physicalInputBuffers_[channelIndex].data();

@@ -7,7 +7,7 @@ AudioInputNode::AudioInputNode(const std::string& id, int channelIndex)
   : Node(id), channelIndex_(channelIndex) {
   
   addOutputPort("out", PortType::Audio);
-  params.push_back({"channel", static_cast<float>(channelIndex)});
+  getParams().push_back({"channel", channelIndex});
 }
 
 void AudioInputNode::prepare(int sampleRate, int blockSize) {

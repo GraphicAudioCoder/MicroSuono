@@ -17,9 +17,9 @@ SineNode::SineNode(const std::string& id, float frequency, float amplitude, floa
   addInputPort("amplitude", PortType::Control);
   addInputPort("offset", PortType::Control);
   addOutputPort("out", PortType::Audio);
-  params.push_back({"frequency", frequency});
-  params.push_back({"amplitude", amplitude});
-  params.push_back({"offset", offset});
+  getParams().push_back({"frequency", frequency});
+  getParams().push_back({"amplitude", amplitude});
+  getParams().push_back({"offset", offset});
 }
 
 void SineNode::prepare(int sampleRate, int blockSize) {
@@ -83,17 +83,17 @@ void SineNode::setFrequency(float freq) {
   frequency_ = freq;
   targetFrequency_ = freq;
   frequencyDelta_ = (targetFrequency_ - currentFrequency_) / smoothingSamples_;
-  params[0].value = freq;
+  setParam("frequency", freq);
 }
 
 void SineNode::setAmplitude(float amp) {
   amplitude_ = amp;
-  params[1].value = amp;
+  setParam("amplitude", amp);
 }
 
 void SineNode::setOffset(float off) {
   offset_ = off;
-  params[2].value = off;
+  setParam("offset", off);
 }
 
 } // namespace ms

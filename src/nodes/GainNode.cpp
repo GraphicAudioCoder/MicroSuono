@@ -12,7 +12,7 @@ GainNode::GainNode(const std::string& id, float gain)
   addInputPort("in", PortType::Audio);
   addInputPort("gain", PortType::Control);
   addOutputPort("out", PortType::Audio);
-  params.push_back({"gain", gain});
+  getParams().push_back({"gain", gain});
 }
 
 void GainNode::prepare(int sampleRate, int blockSize) {
@@ -72,7 +72,7 @@ void GainNode::processControl(
 void GainNode::setGain(float gain) {
   targetGain_ = gain;
   needsSmoothing_ = true;
-  params[0].value = gain;
+  setParam("gain", gain);
 }
 
 float GainNode::getGain() const {

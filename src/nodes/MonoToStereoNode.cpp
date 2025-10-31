@@ -14,7 +14,7 @@ MonoToStereoNode::MonoToStereoNode(const std::string& id, float pan)
   addOutputPort("left", PortType::Audio);
   addOutputPort("right", PortType::Audio);
   
-  params.push_back({"pan", pan});
+  getParams().push_back({"pan", pan});
 }
 
 void MonoToStereoNode::prepare(int sampleRate, int blockSize) {
@@ -54,7 +54,7 @@ void MonoToStereoNode::processControl(
       if (pan_ < -1.0f) pan_ = -1.0f;
       if (pan_ > 1.0f) pan_ = 1.0f;
       
-      params[0].value = pan_;
+      setParam("pan", pan_);
     }
   }
 }

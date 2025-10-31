@@ -20,7 +20,7 @@ struct Event {
   ControlValue value;      // Optional event data
   int sampleOffset;        // Sample position within block (0 to blockSize-1)
   
-  Event(const std::string& type, ControlValue value = 0.0f, int sampleOffset = 0)
+  Event(const std::string& type, const ControlValue& value = 0.0f, int sampleOffset = 0)
     : type(type), value(value), sampleOffset(sampleOffset) {}
 };
 
