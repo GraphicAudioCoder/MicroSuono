@@ -25,8 +25,8 @@ public:
   int getChannelIndex() const { return channelIndex_; }
   void setChannelIndex(int index) { channelIndex_ = index; }
 
-private:
-  int channelIndex_;
+protected:
+  int channelIndex_;  ///< Physical input channel index (accessible to subclasses)
 };
 
 } // namespace ms

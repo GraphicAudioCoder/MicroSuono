@@ -17,12 +17,12 @@ public:
   void setGain(float gain);
   float getGain() const;
 
-private:
-  float targetGain_;      // Target gain value
-  float currentGain_;     // Current smoothed gain value
-  float deltaGain_;       // Per-sample increment
-  bool needsSmoothing_;   // Flag to trigger smoothing
-  int samplesPerBlock_;   // Samples per block for smoothing calculation
+protected:
+  float targetGain_;      ///< Target gain value
+  float currentGain_;     ///< Current smoothed gain value
+  float deltaGain_;       ///< Per-sample increment
+  bool needsSmoothing_;   ///< Flag to trigger smoothing
+  int samplesPerBlock_;   ///< Samples per block for smoothing calculation
 };
 
 } // namespace ms

@@ -1,0 +1,81 @@
+\doxysection{ms Namespace Reference}
+\hypertarget{namespacems}{}\label{namespacems}\index{ms@{ms}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structms_1_1_param}{Param}}
+\begin{DoxyCompactList}\small\item\em Represents a named parameter of a \doxylink{classms_1_1_node}{Node}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classms_1_1_node}{Node}}
+\begin{DoxyCompactList}\small\item\em Represents a processing unit in the Milli\+Suono graph. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structms_1_1_event}{Event}}
+\begin{DoxyCompactList}\small\item\em Represents a time-\/stamped event in the audio processing timeline. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structms_1_1_port}{Port}}
+\begin{DoxyCompactList}\small\item\em Represents an input or output port of a \doxylink{classms_1_1_node}{Node}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespacems_a151de2fccda8383fc510229a1fcfc8e2}{Control\+Value}} = std\+::variant$<$float, int, bool, std\+::string$>$
+\begin{DoxyCompactList}\small\item\em Represents the value carried by a control or event port. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespacems_ac995bed488d596a374eef3c9e4a271ff}{Port\+Type}} \{ \mbox{\hyperlink{namespacems_ac995bed488d596a374eef3c9e4a271ffab22f0418e8ac915eb66f829d262d14a2}{Audio}}
+, \mbox{\hyperlink{namespacems_ac995bed488d596a374eef3c9e4a271ffaa1595abbb4c3a326636dd178757cd6c1}{Control}}
+, \mbox{\hyperlink{namespacems_ac995bed488d596a374eef3c9e4a271ffaa4ecfc70574394990cf17bd83df499f7}{Event}}
+ \}
+\begin{DoxyCompactList}\small\item\em Defines the possible types of ports in the Milli\+Suono system. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{namespacems_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespacems_a151de2fccda8383fc510229a1fcfc8e2}\index{ms@{ms}!ControlValue@{ControlValue}}
+\index{ControlValue@{ControlValue}!ms@{ms}}
+\doxysubsubsection{\texorpdfstring{ControlValue}{ControlValue}}
+{\footnotesize\ttfamily \label{namespacems_a151de2fccda8383fc510229a1fcfc8e2} 
+using \mbox{\hyperlink{namespacems_a151de2fccda8383fc510229a1fcfc8e2}{ms\+::\+Control\+Value}} = std\+::variant$<$float, int, bool, std\+::string$>$}
+
+
+
+Represents the value carried by a control or event port. 
+
+This can be one of the following\+:
+\begin{DoxyItemize}
+\item float\+: for continuous parameters (e.\+g., gain, frequency)
+\item int\+: for discrete parameters or indices
+\item bool\+: for binary control signals (e.\+g., mute, toggle)
+\item std\+::string\+: for symbolic or textual data 
+\end{DoxyItemize}
+
+\label{doc-enum-members}
+\Hypertarget{namespacems_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespacems_ac995bed488d596a374eef3c9e4a271ff}\index{ms@{ms}!PortType@{PortType}}
+\index{PortType@{PortType}!ms@{ms}}
+\doxysubsubsection{\texorpdfstring{PortType}{PortType}}
+{\footnotesize\ttfamily \label{namespacems_ac995bed488d596a374eef3c9e4a271ff} 
+enum class \mbox{\hyperlink{namespacems_ac995bed488d596a374eef3c9e4a271ff}{ms\+::\+Port\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Defines the possible types of ports in the Milli\+Suono system. 
+
+
+\begin{DoxyItemize}
+\item Audio\+: for audio signal connections
+\item Control\+: for control parameters (float, int, bool, string)
+\item \doxylink{structms_1_1_event}{Event}\+: for time-\/stamped control or trigger events 
+\end{DoxyItemize}\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Audio@{Audio}!ms@{ms}}\index{ms@{ms}!Audio@{Audio}}}\Hypertarget{namespacems_ac995bed488d596a374eef3c9e4a271ffab22f0418e8ac915eb66f829d262d14a2}\label{namespacems_ac995bed488d596a374eef3c9e4a271ffab22f0418e8ac915eb66f829d262d14a2} 
+Audio&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Control@{Control}!ms@{ms}}\index{ms@{ms}!Control@{Control}}}\Hypertarget{namespacems_ac995bed488d596a374eef3c9e4a271ffaa1595abbb4c3a326636dd178757cd6c1}\label{namespacems_ac995bed488d596a374eef3c9e4a271ffaa1595abbb4c3a326636dd178757cd6c1} 
+Control&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Event@{Event}!ms@{ms}}\index{ms@{ms}!Event@{Event}}}\Hypertarget{namespacems_ac995bed488d596a374eef3c9e4a271ffaa4ecfc70574394990cf17bd83df499f7}\label{namespacems_ac995bed488d596a374eef3c9e4a271ffaa4ecfc70574394990cf17bd83df499f7} 
+Event&\\
+\hline
+
+\end{DoxyEnumFields}

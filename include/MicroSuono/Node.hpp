@@ -219,15 +219,14 @@ protected:
   int sampleRate_ = 44100;         ///< Audio sample rate
   int blockSize_ = 512;            ///< Audio block size
 
-  // Fade-in state
+  class GraphManager* graphManager_ = nullptr; ///< Reference to graph manager
+
+private:
+  // Fade-in state (internal, not needed by subclasses)
   float fadeInDurationMs_ = 50.0f;  ///< Default 50ms fade-in
   int fadeInSamples_ = 0;           ///< Number of fade-in samples
   int currentFadeSample_ = 0;       ///< Current fade-in sample position
   bool fadeInActive_ = false;       ///< Is fade-in currently active?
-
-  class GraphManager* graphManager_ = nullptr; ///< Reference to graph manager
-
-private:
   /**
    * @brief Update fade-in sample count from duration and sample rate
    */

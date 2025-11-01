@@ -36,24 +36,24 @@ public:
     const std::unordered_map<std::string, ControlValue>& controlInputs,
     std::unordered_map<std::string, ControlValue>& controlOutputs) override;
 
-private:
-  float defaultFrequency_;
-  float defaultAmplitude_;
+protected:
+  float defaultFrequency_;         ///< Default frequency when no control input
+  float defaultAmplitude_;         ///< Default amplitude when no control input
   
   // Current control values (updated in processControl)
-  float currentFrequency_;
-  float currentAmplitude_;
+  float currentFrequency_;         ///< Current smoothed frequency
+  float currentAmplitude_;         ///< Current smoothed amplitude
   
   // Oscillator state
-  float phase_;
-  float phaseIncrement_;
+  float phase_;                    ///< Current phase [0, 2π]
+  float phaseIncrement_;           ///< Phase increment per sample
   
   // Smoothing for parameter changes (to avoid clicks/pops)
-  float targetFrequency_;
-  float targetAmplitude_;
-  float frequencySmoothingCoeff_;
-  float amplitudeSmoothingCoeff_;
-  static constexpr float SMOOTHING_TIME_MS = 10.0f; // 10ms smoothing
+  float targetFrequency_;          ///< Target frequency for smoothing
+  float targetAmplitude_;          ///< Target amplitude for smoothing
+  float frequencySmoothingCoeff_;  ///< Exponential smoothing coefficient
+  float amplitudeSmoothingCoeff_;  ///< Exponential smoothing coefficient
+  static constexpr float SMOOTHING_TIME_MS = 10.0f; ///< 10ms smoothing time
   
   void updatePhaseIncrement();
 };

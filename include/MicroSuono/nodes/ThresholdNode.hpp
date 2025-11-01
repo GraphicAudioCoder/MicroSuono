@@ -22,9 +22,9 @@ public:
   void setThreshold(float threshold);
   float getThreshold() const;
 
-private:
-  float threshold_;
-  bool wasAboveThreshold_;  // Track previous state for edge detection
+protected:
+  float threshold_;              ///< Threshold level
+  bool wasAboveThreshold_;       ///< Track previous state for edge detection
 };
 
 } // namespace ms

@@ -19,18 +19,18 @@ public:
   void setAmplitude(float amp);
   void setOffset(float off);
 
-private:
-  float frequency_;
-  float amplitude_;
-  float offset_;
-  float phase_;
-  float phaseIncrement_;
+protected:
+  float frequency_;        ///< Oscillator frequency in Hz
+  float amplitude_;        ///< Output amplitude
+  float offset_;           ///< DC offset
+  float phase_;            ///< Current phase [0, 2π]
+  float phaseIncrement_;   ///< Phase increment per sample
   
   // Smoothing for frequency changes to avoid phase discontinuities
-  float targetFrequency_;
-  float currentFrequency_;
-  float frequencyDelta_;
-  int smoothingSamples_;
+  float targetFrequency_;  ///< Target frequency for smoothing
+  float currentFrequency_; ///< Current smoothed frequency
+  float frequencyDelta_;   ///< Per-sample frequency delta
+  int smoothingSamples_;   ///< Number of samples for smoothing
 };
 
 } // namespace ms

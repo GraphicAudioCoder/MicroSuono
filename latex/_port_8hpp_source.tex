@@ -1,0 +1,37 @@
+\doxysection{Port.\+hpp}
+\hypertarget{_port_8hpp_source}{}\label{_port_8hpp_source}\index{include/core/Port.hpp@{include/core/Port.hpp}}
+\mbox{\hyperlink{_port_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <variant>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }ms\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{PortType}}\ \{\ Audio,\ Control,\ \mbox{\hyperlink{structms_1_1_event}{Event}}\ \};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{using\ }\mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ =\ std::variant<float,\ int,\ bool,\ std::string>;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structms_1_1_event_abfbf3b253383e392d1d512a20711a351}{Event}}\ \{}
+\DoxyCodeLine{00045\ \ \ std::string\ \mbox{\hyperlink{structms_1_1_event_a9ff3b1e077fbe27fd17ccceac2679994}{type}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ \mbox{\hyperlink{structms_1_1_event_a78f058fb7ee3971dbcad2ee41b3d1bf7}{value}};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structms_1_1_event_a458099dcd37aa7c4341aeedee01af436}{sampleOffset}};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{structms_1_1_event_abfbf3b253383e392d1d512a20711a351}{Event}}(\textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{structms_1_1_event_a9ff3b1e077fbe27fd17ccceac2679994}{type}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ \&\mbox{\hyperlink{structms_1_1_event_a78f058fb7ee3971dbcad2ee41b3d1bf7}{value}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structms_1_1_event_a458099dcd37aa7c4341aeedee01af436}{sampleOffset}})}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ :\ \mbox{\hyperlink{structms_1_1_event_a9ff3b1e077fbe27fd17ccceac2679994}{type}}(\mbox{\hyperlink{structms_1_1_event_a9ff3b1e077fbe27fd17ccceac2679994}{type}}),\ \mbox{\hyperlink{structms_1_1_event_a78f058fb7ee3971dbcad2ee41b3d1bf7}{value}}(\mbox{\hyperlink{structms_1_1_event_a78f058fb7ee3971dbcad2ee41b3d1bf7}{value}}),\ \mbox{\hyperlink{structms_1_1_event_a458099dcd37aa7c4341aeedee01af436}{sampleOffset}}(\mbox{\hyperlink{structms_1_1_event_a458099dcd37aa7c4341aeedee01af436}{sampleOffset}})\ \{\}}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structms_1_1_port_a9888800ef4faa5c21954fa06d494505f}{Port}}\ \{}
+\DoxyCodeLine{00073\ \ \ std::string\ \mbox{\hyperlink{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}{name}};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{PortType}}\ \mbox{\hyperlink{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}{type}};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{structms_1_1_port_a9888800ef4faa5c21954fa06d494505f}{Port}}(\textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}{name}},\ \mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{PortType}}\ \mbox{\hyperlink{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}{type}})\ :\ \mbox{\hyperlink{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}{name}}(\mbox{\hyperlink{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}{name}}),\ \mbox{\hyperlink{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}{type}}(\mbox{\hyperlink{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}{type}})\ \{\}}
+\DoxyCodeLine{00084\ \};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \}\ \textcolor{comment}{//\ namespace\ ms}}
+
+\end{DoxyCode}

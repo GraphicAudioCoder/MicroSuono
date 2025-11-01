@@ -31,28 +31,28 @@ public:
   /** Is stereo output? */
   bool isStereo() const { return stereo_; }
 
-private:
-  int numInputs_;
-  bool stereo_;
+protected:
+  int numInputs_;                          ///< Number of input channels
+  bool stereo_;                            ///< Stereo output mode
   
   // Per-channel gains with smoothing
-  std::vector<float> channelGains_;
-  std::vector<float> targetGains_;
-  std::vector<float> currentGains_;
-  std::vector<float> gainDeltas_;
+  std::vector<float> channelGains_;        ///< Target gains per channel
+  std::vector<float> targetGains_;         ///< Target gains for smoothing
+  std::vector<float> currentGains_;        ///< Current smoothed gains
+  std::vector<float> gainDeltas_;          ///< Per-sample gain deltas
   
   // Per-channel panning (-1.0 to 1.0, only for stereo)
-  std::vector<float> channelPans_;
-  std::vector<float> targetPans_;
-  std::vector<float> currentPans_;
-  std::vector<float> panDeltas_;
+  std::vector<float> channelPans_;         ///< Target pans per channel
+  std::vector<float> targetPans_;          ///< Target pans for smoothing
+  std::vector<float> currentPans_;         ///< Current smoothed pans
+  std::vector<float> panDeltas_;           ///< Per-sample pan deltas
   
-  float masterGain_;
-  float targetMasterGain_;
-  float currentMasterGain_;
-  float masterGainDelta_;
+  float masterGain_;                       ///< Master output gain
+  float targetMasterGain_;                 ///< Target master gain
+  float currentMasterGain_;                ///< Current smoothed master gain
+  float masterGainDelta_;                  ///< Per-sample master gain delta
   
-  int smoothingSamples_;
+  int smoothingSamples_;                   ///< Number of samples for smoothing
   
   void updateGainSmoothing();
   void updatePanSmoothing();

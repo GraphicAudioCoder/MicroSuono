@@ -1,0 +1,158 @@
+\doxysection{ms\+::Node Class Reference}
+\hypertarget{classms_1_1_node}{}\label{classms_1_1_node}\index{ms::Node@{ms::Node}}
+
+
+Represents a processing unit in the Milli\+Suono graph.  
+
+
+
+
+{\ttfamily \#include $<$Node.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classms_1_1_node_a8717965611dbadcd49386110b6fbf211}{Node}} (const std\+::string \&id)
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{classms_1_1_node}{Node} with a given identifier. \end{DoxyCompactList}\item 
+\Hypertarget{classms_1_1_node_a727bc2c83fb7e44d6cb8b142be567108}\label{classms_1_1_node_a727bc2c83fb7e44d6cb8b142be567108} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Node} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for proper cleanup in derived classes. \end{DoxyCompactList}\item 
+const std\+::string \& \mbox{\hyperlink{classms_1_1_node_a09711f0d96ffa865fba844cb5930c14d}{get\+Id}} () const
+\begin{DoxyCompactList}\small\item\em Returns the unique identifier of the \doxylink{classms_1_1_node}{Node}. \end{DoxyCompactList}\item 
+const std\+::vector$<$ \mbox{\hyperlink{structms_1_1_param}{Param}} $>$ \& \mbox{\hyperlink{classms_1_1_node_a8f82891eced550ac1252c33f8c89720a}{get\+Params}} () const
+\begin{DoxyCompactList}\small\item\em Returns the list of parameters associated with the \doxylink{classms_1_1_node}{Node} (read-\/only). \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{structms_1_1_param}{Param}} $>$ \mbox{\hyperlink{classms_1_1_node_a65e93d2b413290ad3230e41124b4ff34}{get\+Params}} ()
+\begin{DoxyCompactList}\small\item\em Returns the list of parameters associated with the \doxylink{classms_1_1_node}{Node} (mutable). \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{Control\+Value}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classms_1_1_node_ad61afbb605dad4a5aaca567445b57084}{get\+Param}} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Retrieves a parameter value by name. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classms_1_1_node_ac399af5dd9ea50409bb7c8b216df3437}{set\+Params}} (const std\+::vector$<$ \mbox{\hyperlink{structms_1_1_param}{Param}} $>$ \&new\+Params)
+\begin{DoxyCompactList}\small\item\em Sets the parameters of the \doxylink{classms_1_1_node}{Node}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classms_1_1_node_afd3d4e35c6ed0dec4eb53b8fe2afe391}{set\+Param}} (const std\+::string \&name, const \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{Control\+Value}} \&value)
+\begin{DoxyCompactList}\small\item\em Sets a parameter value by name. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a processing unit in the Milli\+Suono graph. 
+
+A \doxylink{classms_1_1_node}{Node} defines a functional unit (e.\+g. an oscillator, filter, or mixer) with a unique identifier and a set of configurable parameters. Nodes can be connected via Ports to form complex audio processing graphs. 
+
+\label{doc-constructors}
+\Hypertarget{classms_1_1_node_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classms_1_1_node_a8717965611dbadcd49386110b6fbf211}\index{ms::Node@{ms::Node}!Node@{Node}}
+\index{Node@{Node}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{Node()}{Node()}}
+{\footnotesize\ttfamily \label{classms_1_1_node_a8717965611dbadcd49386110b6fbf211} 
+ms\+::\+Node\+::\+Node (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructs a \doxylink{classms_1_1_node}{Node} with a given identifier. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & The unique string identifier for the \doxylink{classms_1_1_node}{Node}. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{classms_1_1_node_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classms_1_1_node_a09711f0d96ffa865fba844cb5930c14d}\index{ms::Node@{ms::Node}!getId@{getId}}
+\index{getId@{getId}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{getId()}{getId()}}
+{\footnotesize\ttfamily \label{classms_1_1_node_a09711f0d96ffa865fba844cb5930c14d} 
+const std\+::string \& ms\+::\+Node\+::get\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the unique identifier of the \doxylink{classms_1_1_node}{Node}. 
+
+\begin{DoxyReturn}{Returns}
+The \doxylink{classms_1_1_node}{Node}\textquotesingle{}s identifier string. 
+\end{DoxyReturn}
+\Hypertarget{classms_1_1_node_ad61afbb605dad4a5aaca567445b57084}\index{ms::Node@{ms::Node}!getParam@{getParam}}
+\index{getParam@{getParam}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{getParam()}{getParam()}}
+{\footnotesize\ttfamily \label{classms_1_1_node_ad61afbb605dad4a5aaca567445b57084} 
+const \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{Control\+Value}} \texorpdfstring{$\ast$}{*} ms\+::\+Node\+::get\+Param (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves a parameter value by name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the parameter to retrieve. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the \doxylink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{Control\+Value} if found, nullptr otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classms_1_1_node_a65e93d2b413290ad3230e41124b4ff34}\index{ms::Node@{ms::Node}!getParams@{getParams}}
+\index{getParams@{getParams}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{getParams()}{getParams()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classms_1_1_node_a65e93d2b413290ad3230e41124b4ff34} 
+std\+::vector$<$ \mbox{\hyperlink{structms_1_1_param}{Param}} $>$ ms\+::\+Node\+::get\+Params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the list of parameters associated with the \doxylink{classms_1_1_node}{Node} (mutable). 
+
+\begin{DoxyReturn}{Returns}
+A const reference to the vector of Params. 
+\end{DoxyReturn}
+\Hypertarget{classms_1_1_node_a8f82891eced550ac1252c33f8c89720a}\index{ms::Node@{ms::Node}!getParams@{getParams}}
+\index{getParams@{getParams}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{getParams()}{getParams()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classms_1_1_node_a8f82891eced550ac1252c33f8c89720a} 
+const std\+::vector$<$ \mbox{\hyperlink{structms_1_1_param}{Param}} $>$ \& ms\+::\+Node\+::get\+Params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the list of parameters associated with the \doxylink{classms_1_1_node}{Node} (read-\/only). 
+
+\begin{DoxyReturn}{Returns}
+A const reference to the vector of Params. 
+\end{DoxyReturn}
+\Hypertarget{classms_1_1_node_afd3d4e35c6ed0dec4eb53b8fe2afe391}\index{ms::Node@{ms::Node}!setParam@{setParam}}
+\index{setParam@{setParam}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{setParam()}{setParam()}}
+{\footnotesize\ttfamily \label{classms_1_1_node_afd3d4e35c6ed0dec4eb53b8fe2afe391} 
+bool ms\+::\+Node\+::set\+Param (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{, }\item[{const \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{Control\+Value}} \&}]{value}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets a parameter value by name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the parameter to set. \\
+\hline
+{\em value} & The new value to assign to the parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the parameter was found and set, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classms_1_1_node_ac399af5dd9ea50409bb7c8b216df3437}\index{ms::Node@{ms::Node}!setParams@{setParams}}
+\index{setParams@{setParams}!ms::Node@{ms::Node}}
+\doxysubsubsection{\texorpdfstring{setParams()}{setParams()}}
+{\footnotesize\ttfamily \label{classms_1_1_node_ac399af5dd9ea50409bb7c8b216df3437} 
+void ms\+::\+Node\+::set\+Params (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{structms_1_1_param}{Param}} $>$ \&}]{new\+Params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the parameters of the \doxylink{classms_1_1_node}{Node}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Params} & A vector of Params to set for the \doxylink{classms_1_1_node}{Node}. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/core/\mbox{\hyperlink{_node_8hpp}{Node.\+hpp}}\end{DoxyCompactItemize}

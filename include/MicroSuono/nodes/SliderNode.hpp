@@ -70,10 +70,10 @@ public:
   float getMaxValue() const { return maxValue_; }
 
 private:
-  float value_;
-  float minValue_;
-  float maxValue_;
-  ScaleType scaleType_;
+  float value_;            ///< Current slider value
+  float minValue_;         ///< Minimum value
+  float maxValue_;         ///< Maximum value
+  ScaleType scaleType_;    ///< Scaling type (Linear or Logarithmic)
   
   // Helper functions for logarithmic scaling
   float normalizedToValue(float normalized) const;

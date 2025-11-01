@@ -1,0 +1,76 @@
+\doxysection{include/core/\+Port.hpp File Reference}
+\hypertarget{_port_8hpp}{}\label{_port_8hpp}\index{include/core/Port.hpp@{include/core/Port.hpp}}
+
+
+Defines the basic data structures for ports and events in the Milli\+Suono system.  
+
+
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$variant$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structms_1_1_event}{ms\+::\+Event}}
+\begin{DoxyCompactList}\small\item\em Represents a time-\/stamped event in the audio processing timeline. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structms_1_1_port}{ms\+::\+Port}}
+\begin{DoxyCompactList}\small\item\em Represents an input or output port of a \doxylink{classms_1_1_node}{Node}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ms\+::\+Control\+Value}} = std\+::variant$<$float, int, bool, std\+::string$>$
+\begin{DoxyCompactList}\small\item\em Represents the value carried by a control or event port. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{ms\+::\+Port\+Type}} \{ {\bfseries Audio}
+, {\bfseries Control}
+, {\bfseries Event}
+ \}
+\begin{DoxyCompactList}\small\item\em Defines the possible types of ports in the Milli\+Suono system. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines the basic data structures for ports and events in the Milli\+Suono system. 
+
+This file declares the fundamental types used for representing audio, control, and event connections within the Milli\+Suono framework. 
+
+\label{doc-typedef-members}
+\Hypertarget{_port_8hpp_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}\index{Port.hpp@{Port.hpp}!ControlValue@{ControlValue}}
+\index{ControlValue@{ControlValue}!Port.hpp@{Port.hpp}}
+\doxysubsubsection{\texorpdfstring{ControlValue}{ControlValue}}
+{\footnotesize\ttfamily \label{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2} 
+using \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ms\+::\+Control\+Value}} = std\+::variant$<$float, int, bool, std\+::string$>$}
+
+
+
+Represents the value carried by a control or event port. 
+
+This can be one of the following\+:
+\begin{DoxyItemize}
+\item float\+: for continuous parameters (e.\+g., gain, frequency)
+\item int\+: for discrete parameters or indices
+\item bool\+: for binary control signals (e.\+g., mute, toggle)
+\item std\+::string\+: for symbolic or textual data 
+\end{DoxyItemize}
+
+\label{doc-enum-members}
+\Hypertarget{_port_8hpp_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}\index{Port.hpp@{Port.hpp}!PortType@{PortType}}
+\index{PortType@{PortType}!Port.hpp@{Port.hpp}}
+\doxysubsubsection{\texorpdfstring{PortType}{PortType}}
+{\footnotesize\ttfamily \label{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff} 
+enum class \mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{ms\+::\+Port\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Defines the possible types of ports in the Milli\+Suono system. 
+
+
+\begin{DoxyItemize}
+\item Audio\+: for audio signal connections
+\item Control\+: for control parameters (float, int, bool, string)
+\item Event\+: for time-\/stamped control or trigger events 
+\end{DoxyItemize}

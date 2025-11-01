@@ -1,0 +1,72 @@
+\doxysection{ms\+::Port Struct Reference}
+\hypertarget{structms_1_1_port}{}\label{structms_1_1_port}\index{ms::Port@{ms::Port}}
+
+
+Represents an input or output port of a \doxylink{classms_1_1_node}{Node}.  
+
+
+
+
+{\ttfamily \#include $<$Port.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structms_1_1_port_a9888800ef4faa5c21954fa06d494505f}{Port}} (const std\+::string \&\mbox{\hyperlink{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}{name}}, \mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{Port\+Type}} \mbox{\hyperlink{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}{type}})
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{structms_1_1_port}{Port} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}{name}}
+\item 
+\mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{Port\+Type}} \mbox{\hyperlink{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}{type}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an input or output port of a \doxylink{classms_1_1_node}{Node}. 
+
+Ports define the interface through which nodes exchange audio, control, or event data in the Milli\+Suono engine. 
+
+\label{doc-constructors}
+\Hypertarget{structms_1_1_port_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structms_1_1_port_a9888800ef4faa5c21954fa06d494505f}\index{ms::Port@{ms::Port}!Port@{Port}}
+\index{Port@{Port}!ms::Port@{ms::Port}}
+\doxysubsubsection{\texorpdfstring{Port()}{Port()}}
+{\footnotesize\ttfamily \label{structms_1_1_port_a9888800ef4faa5c21954fa06d494505f} 
+ms\+::\+Port\+::\+Port (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{, }\item[{\mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{Port\+Type}}}]{type}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructs a \doxylink{structms_1_1_port}{Port} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name identifying the port. \\
+\hline
+{\em type} & The port type (Audio, Control, or \doxylink{structms_1_1_event}{Event}). \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-variable-members}
+\Hypertarget{structms_1_1_port_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681}\index{ms::Port@{ms::Port}!name@{name}}
+\index{name@{name}!ms::Port@{ms::Port}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily \label{structms_1_1_port_a9fc3167b495cc505bca6d978a7f1b681} 
+std\+::string ms\+::\+Port\+::name}
+
+The unique name of the port within a node. \Hypertarget{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb}\index{ms::Port@{ms::Port}!type@{type}}
+\index{type@{type}!ms::Port@{ms::Port}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structms_1_1_port_a69e92fafc61ac71bfdd7764a04bccfcb} 
+\mbox{\hyperlink{_port_8hpp_ac995bed488d596a374eef3c9e4a271ff}{Port\+Type}} ms\+::\+Port\+::type}
+
+The type of the port (Audio, Control, or \doxylink{structms_1_1_event}{Event}). 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/core/\mbox{\hyperlink{_port_8hpp}{Port.\+hpp}}\end{DoxyCompactItemize}

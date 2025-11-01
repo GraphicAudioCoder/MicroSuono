@@ -27,8 +27,8 @@ public:
     const std::unordered_map<std::string, ControlValue>& controlInputs,
     std::unordered_map<std::string, ControlValue>& controlOutputs) override;
 
-private:
-  float pan_;
+protected:
+  float pan_;  ///< Pan position (-1.0 = left, 0.0 = center, +1.0 = right)
 };
 
 } // namespace ms

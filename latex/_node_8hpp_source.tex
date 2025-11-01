@@ -1,0 +1,62 @@
+\doxysection{Node.\+hpp}
+\hypertarget{_node_8hpp_source}{}\label{_node_8hpp_source}\index{include/core/Node.hpp@{include/core/Node.hpp}}
+\mbox{\hyperlink{_node_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_port_8hpp}{Port.hpp}}"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }ms\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structms_1_1_param_a8ae002bfae57d2eb51c921abb178dd2a}{Param}}\ \{}
+\DoxyCodeLine{00026\ \ \ std::string\ \mbox{\hyperlink{structms_1_1_param_a02c46666b2c5b4a5c27d33f986de1898}{name}};}
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ \mbox{\hyperlink{structms_1_1_param_abdfdfd8df00ef48d72a64c7b1f739438}{value}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{structms_1_1_param_a8ae002bfae57d2eb51c921abb178dd2a}{Param}}(\textcolor{keyword}{const}\ std::string\ \&paramName,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ \&paramValue)}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ :\ \mbox{\hyperlink{structms_1_1_param_a02c46666b2c5b4a5c27d33f986de1898}{name}}(paramName),\ \mbox{\hyperlink{structms_1_1_param_abdfdfd8df00ef48d72a64c7b1f739438}{value}}(paramValue)\ \{\}}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classms_1_1_node_a8717965611dbadcd49386110b6fbf211}{Node}}\ \{}
+\DoxyCodeLine{00043\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{classms_1_1_node_a8717965611dbadcd49386110b6fbf211}{Node}}(\textcolor{keyword}{const}\ std::string\ \&\textcolor{keywordtype}{id})\ :\ id\_(id)\ \{\}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classms_1_1_node_a727bc2c83fb7e44d6cb8b142be567108}{\string~Node}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{classms_1_1_node_a09711f0d96ffa865fba844cb5930c14d}{getId}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ id\_;\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00065\ \ \ \textcolor{keyword}{const}\ std::vector<Param>\ \&\mbox{\hyperlink{classms_1_1_node_a8f82891eced550ac1252c33f8c89720a}{getParams}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ params\_;\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00071\ \ \ std::vector<Param>\ \mbox{\hyperlink{classms_1_1_node_a65e93d2b413290ad3230e41124b4ff34}{getParams}}()\ \{\ \textcolor{keywordflow}{return}\ params\_;\ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00078\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ *\mbox{\hyperlink{classms_1_1_node_ad61afbb605dad4a5aaca567445b57084}{getParam}}(\textcolor{keyword}{const}\ std::string\ \&name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&param\ :\ params\_)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (param.name\ ==\ name)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&param.value;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00085\ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00091\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classms_1_1_node_ac399af5dd9ea50409bb7c8b216df3437}{setParams}}(\textcolor{keyword}{const}\ std::vector<Param>\ \&newParams)\ \{\ params\_\ =\ newParams;\ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00099\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classms_1_1_node_afd3d4e35c6ed0dec4eb53b8fe2afe391}{setParam}}(\textcolor{keyword}{const}\ std::string\ \&name,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{_port_8hpp_a151de2fccda8383fc510229a1fcfc8e2}{ControlValue}}\ \&value)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&param\ :\ params\_)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (param.name\ ==\ name)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ param.value\ =\ value;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00107\ \ \ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00111\ \ \ \textcolor{keyword}{const}\ std::string\ id\_;}
+\DoxyCodeLine{00113\ \ \ std::vector<Param>\ params\_;}
+\DoxyCodeLine{00114\ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \}\ \textcolor{comment}{//\ namespace\ ms}}
+
+\end{DoxyCode}
