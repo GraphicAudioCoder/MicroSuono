@@ -169,27 +169,18 @@ public:
   void setGraphManager(class GraphManager* graph) { graphManager_ = graph; }
 
 protected:
+  // === METHODS: Only what subclasses MUST call (cannot implement themselves) ===
+  
   /**
-   * @brief Apply fade-in envelope to an audio buffer (called internally)
+   * @brief Apply fade-in envelope to an audio buffer
+   * Subclasses should call this at the end of process() on their output buffer
    * @param buffer Audio buffer to apply fade-in to
    * @param nFrames Number of frames in the buffer
    */
-  void applyFadeIn(float* buffer, int nFrames) {
-    if (!fadeInActive_) return;
-    
-    for (int i = 0; i < nFrames; ++i) {
-      if (currentFadeSample_ < fadeInSamples_) {
-        float fadeGain = static_cast<float>(currentFadeSample_) / fadeInSamples_;
-        buffer[i] *= fadeGain;
-        currentFadeSample_++;
-      } else {
-        fadeInActive_ = false;
-        break;
-      }
-    }
-  }
+  void applyFadeIn(float* buffer, int nFrames);
+  
   /**
-   * @brief Add an input port to the node
+   * @brief Add an input port (must be called in constructor)
    * @param name Port name
    * @param type Port type (audio, control, event)
    */
@@ -198,7 +189,7 @@ protected:
   }
   
   /**
-   * @brief Add an output port to the node
+   * @brief Add an output port (must be called in constructor)
    * @param name Port name
    * @param type Port type (audio, control, event)
    */
@@ -207,35 +198,41 @@ protected:
   }
 
   /**
-   * @brief Get physical audio input from hardware (for nodes that need direct hardware access)
+   * @brief Get physical audio input from hardware
+   * For nodes that need direct hardware access (e.g., AudioInputNode)
    * @param channelIndex Physical input channel index
    * @return Pointer to input buffer, or nullptr if not available
    */
   const float* getPhysicalInput(int channelIndex) const;
 
-  std::vector<Port> inputPorts_;   ///< Input port descriptors
-  std::vector<Port> outputPorts_;  ///< Output port descriptors
+  // === DATA: Direct access for subclasses (for performance in process()) ===
+  
+  std::vector<Port> inputPorts_;   ///< Input port descriptors (read-only access recommended)
+  std::vector<Port> outputPorts_;  ///< Output port descriptors (read-only access recommended)
 
-  int sampleRate_ = 44100;         ///< Audio sample rate
-  int blockSize_ = 512;            ///< Audio block size
+  int sampleRate_ = 44100;         ///< Current audio sample rate
+  int blockSize_ = 512;            ///< Current audio block size
 
-  class GraphManager* graphManager_ = nullptr; ///< Reference to graph manager
+  class GraphManager* graphManager_ = nullptr; ///< Reference to graph manager (for getPhysicalInput)
 
 private:
-  // Fade-in state (internal, not needed by subclasses)
+  // === PRIVATE: Implementation details, not for subclasses ===
+  
+  std::string id_;              ///< Node unique identifier (access via getId())
+  std::vector<Param> params_;   ///< Node parameters (access via getParams())
+  
+  // Fade-in state (managed internally, subclasses only call applyFadeIn())
   float fadeInDurationMs_ = 50.0f;  ///< Default 50ms fade-in
   int fadeInSamples_ = 0;           ///< Number of fade-in samples
   int currentFadeSample_ = 0;       ///< Current fade-in sample position
   bool fadeInActive_ = false;       ///< Is fade-in currently active?
+  
   /**
    * @brief Update fade-in sample count from duration and sample rate
    */
   void updateFadeInSamples() {
     fadeInSamples_ = static_cast<int>((fadeInDurationMs_ / 1000.0f) * sampleRate_);
   }
-
-  std::string id_;              ///< Node unique identifier
-  std::vector<Param> params_;   ///< Node parameters
 };
 
 } // namespace ms
